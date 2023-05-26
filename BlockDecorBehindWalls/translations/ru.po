@@ -1,0 +1,29 @@
+msgid ""
+msgstr ""
+"Application: Oxygen Not IncludedPOT Version: 2.0\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: ru_RU\n"
+
+#. BlockDecorBehindWalls.STRINGS.MODIFIERS.BLOCKDECORBEHINDWALLS.DESC
+msgctxt "BlockDecorBehindWalls.STRINGS.MODIFIERS.BLOCKDECORBEHINDWALLS.DESC"
+msgid "This building is behind the wall"
+msgstr "Это строение находится за стеной"
+
+#. BlockDecorBehindWalls.STRINGS.OPTIONS.LAYER.NAME
+msgctxt "BlockDecorBehindWalls.STRINGS.OPTIONS.LAYER.NAME"
+msgid "Walls layer"
+msgstr "Слой стен"
+
+#. BlockDecorBehindWalls.STRINGS.OPTIONS.LAYER.DESC
+msgctxt "BlockDecorBehindWalls.STRINGS.OPTIONS.LAYER.DESC"
+msgid "Determines layer where drywalls and tempshift plates will be displayed."
+msgstr "Устанавливает слой, на котором будут отображаться гипсокартон и термальные пластины."

@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "ShinebugReactor": {
+      "commandName": "Project"
+    },
+    "Профиль 1": {
+      "commandName": "Executable",
+      "executablePath": "steam://rungameid/457140"
+    }
+  }
+}

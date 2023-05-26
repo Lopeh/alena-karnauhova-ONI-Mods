@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <ModName>Block Decor Effects Behind Walls</ModName>
+        <MinimumSupportedBuild>509629</MinimumSupportedBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="BlockDecorBehindWalls_Old.cs" />
+      <Compile Remove="STRINGS.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="BlockDecorBehindWalls_Old.cs" />
+      <None Include="STRINGS.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="translations\ru.po">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <ModName>Meteor Seasons Notifier</ModName>
+        <UsePLib>true</UsePLib>
+        <RootNamespace>Meteor_Seasons</RootNamespace>
+    </PropertyGroup>
+
+    <Import Project="..\Utils\Utils.projitems" Label="Shared" />
+
+    <ItemGroup>
+      <EditorConfigFiles Remove="D:\Installers\Games\Oxygen Not Included\Mods\_ModifiedByMe\.editorconfig" />
+    </ItemGroup>
+
+</Project>

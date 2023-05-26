@@ -1,0 +1,42 @@
+msgid ""
+msgstr ""
+"Application: Oxygen Not IncludedPOT Version: 2.0\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: ru_RU\n"
+
+msgctxt "Creature_Motion_Sensor.STRINGS.BUILDINGS.PREFABS.LOGICCREATURESENSOR.NAME"
+msgid "<link=\"LOGICCREATURESENSOR\">Creature Motion Sensor</link>"
+msgstr "<link=\"LOGICCREATURESENSOR\">Датчик движения существ</link>"
+
+msgctxt "Creature_Motion_Sensor.STRINGS.BUILDINGS.PREFABS.LOGICCREATURESENSOR.DESC"
+msgid "Motion sensors can be used for special cases in ranching by sensing when critters are nearby."
+msgstr "Датчики движения могут быть использованы для особых случаев в животноводстве посредством обнаружения существ поблизости."
+
+msgctxt "Creature_Motion_Sensor.STRINGS.BUILDINGS.PREFABS.LOGICCREATURESENSOR.EFFECT"
+msgid "Sends a <b><style=\"logic_on\">Green Signal</style></b> or a <b><style=\"logic_off\">Red Signal</style></b> based on whether a critter is in the sensor's range."
+msgstr "Отправляет <b><style=\"logic_on\">зеленый сигнал</style></b> или <b><style=\"logic_off\">красный сигнал</style></b> в зависимости от того, есть ли существо в радиусе действия датчика."
+
+msgctxt "Creature_Motion_Sensor.STRINGS.BUILDINGS.PREFABS.LOGICCREATURESENSOR.LOGIC_PORT"
+msgid "Creature Motion Sensor"
+msgstr "Датчик движения существ"
+
+msgctxt "Creature_Motion_Sensor.STRINGS.BUILDINGS.PREFABS.LOGICCREATURESENSOR.LOGIC_PORT_ACTIVE"
+msgid "Sends a <b><style=\"logic_on\">Green Signal</style></b> while a critter is in the sensor's range"
+msgstr "Отправляет <b><style=\"logic_on\">зеленый сигнал</style></b>, если в радиусе действия датчика есть существо"
+
+msgctxt "Creature_Motion_Sensor.STRINGS.BUILDINGS.PREFABS.LOGICCREATURESENSOR.LOGIC_PORT_INACTIVE"
+msgid "Otherwise, sends a <b><style=\"logic_off\">Red Signal</style></b>"
+msgstr "В противном случае отправляет <b><style=\"logic_off\">красный сигнал</style></b>"
+
+msgctxt "Creature_Motion_Sensor.STRINGS.UI.UISIDESCREENS.LOGICCREATURESENSORSIDESCREEN.TOOLTIP"
+msgid "Will send a <b><style=\"logic_on\">Green Signal</style></b> if there is a critter withing <b>{0}</b> meters."
+msgstr "Отправляет <b><style=\"logic_on\">зеленый сигнал</style></b> при наличии существа в пределах <b>{0}</b> метров."

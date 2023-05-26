@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <ModName>Tiny Worlds</ModName>
+        <SupportedContent>VANILLA_ID</SupportedContent>
+        <UsePLib>true</UsePLib>
+    </PropertyGroup>
+
+    <Import Project="..\Utils\Utils.projitems" Label="Shared" />
+
+</Project>

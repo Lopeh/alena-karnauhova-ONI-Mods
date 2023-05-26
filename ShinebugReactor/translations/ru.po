@@ -1,0 +1,182 @@
+msgid ""
+msgstr ""
+"Application: Oxygen Not IncludedPOT Version: 2.0\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: ru_RU\n"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.NAME"
+msgid "<link=\"SHINEBUGREACTOR\">Shinebug Reactor</link>"
+msgstr "<link=\"SHINEBUGREACTOR\">Блестячковый реактор</link>"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.DESC"
+msgid "When eggs enter the reactor, they are stored inside unti they hatch. The newly hatched <link=\"LIGHTBUG"\>shine bugs</link> are then enslaved for your gain."
+msgstr "Когда яйца попадают в реактор, они хранятся внутри, пока не вылупятся. Затем новорожденные <link=\"LIGHTBUG"\>блестячки</link> порабощаются для вашей выгоды."
+
+msgctxt "ShinebugReactor.STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.EFFECT"
+msgid "Receives <link=\"LIGHTBUG"\>shine bug</link> eggs and generates <link=\"POWER"\>Power</link> and <link=\"RADIATION"\>Radbolts</link> using their light."
+msgstr "Получает яйца <link=\"LIGHTBUG"\>блестячков</link> и генерирует <link=\"POWER"\>энергию</link> и <link=\"RADIATION"\>радболты</link>, используя их свет."
+
+msgctxt "ShinebugReactor.STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.LOGIC_PORT"
+msgid "Do not generate/emit Radbolts"
+msgstr "Не генерировать/излучать радболты"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.LOGIC_PORT_ACTIVE"
+msgid "<b><style=\"logic_on\">Green Signal</style></b>: generate and emit Radbolts"
+msgstr "<b><style=\"logic_on\">Зеленый сигнал</style></b>: генерировать и излучать радболты"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.LOGIC_PORT_INACTIVE"
+msgid "<b><style=\"logic_off\">Red Signal</style></b>: do not generate and emit Radbolts"
+msgstr "<b><style=\"logic_off\">Красный сигнал</style></b>: не генерировать и не излучать радболты"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTORCREATURES.NAME"
+msgid "Creatures: {0}"
+msgstr "Существа: {0}"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTORCREATURES.TOOLTIP"
+msgid "This reactor contains {0} creatures"
+msgstr "Этот реактор содержит {0} существ"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTOREGGS.NAME"
+msgid "Eggs: {0}"
+msgstr "Яйца: {0}"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTOREGGS.TOOLTIP"
+msgid "This reactor contains {0} eggs"
+msgstr "Этот реактор содержит {0} яиц"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTORWATTAGE.NAME"
+msgid "Current Wattage: {0}"
+msgstr "Текущее напряжение: {0}"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTORWATTAGE.TOOLTIP"
+msgid "This reactor is generating {0} of <link=\"POWER"\>Power</link>"
+msgstr "Этот реактор генерирует {0} <link=\"POWER"\>энергии</link>"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTORHEP.NAME"
+msgid "Radbolt production: {0}/cycle"
+msgstr "Сбор радболтов: {0}/цикл"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTORHEP.TOOLTIP"
+msgid "This reactor is generating {0}{1} per cycle"
+msgstr "Этот реактор генерирует {0}{1} за цикл"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTORNOHEPPRODUCTIONWARNING.NAME"
+msgid "No radbolt production"
+msgstr "Нет производства радболтов"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTORNOHEPPRODUCTIONWARNING.TOOLTIP"
+msgid "This reactor is not generating radbolts due to insufficient power generation"
+msgstr "Этот реактор не генерирует радболты из-за недостаточного производства энергии"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTORHEPPRODUCTIONDISABLED.NAME"
+msgid "Radbolt production disabled"
+msgstr "Производство радболтов отключено"
+
+msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTORHEPPRODUCTIONDISABLED.TOOLTIP"
+msgid "Radbolt production is disabled by automation"
+msgstr "Производство радболтов отключено автоматикой"
+
+msgctxt "ShinebugReactor.STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.SHINEBUGREACTORREQUIRESPOWER"
+msgid "Should generate at least <style=\"consumed\">{0}</style> of power to produce radbolts"
+msgstr "Должен производить минимум <style=\"consumed\">{0}</style> энергии для генерации радболтов"
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.REPRODUCTIONMODE.NAME"
+msgid "Reproduction mode"
+msgstr "Режим воспроизводства"
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.REPRODUCTIONMODE.DESC"
+msgid "Reproduction options for creatures stored in the reactor."
+msgstr "Варианты воспроизводства существ, хранящихся в реакторе."
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.REPRODUCTIONMODE.IMMORTALITY.NAME"
+msgid "Immortality"
+msgstr "Бессмертие"
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.REPRODUCTIONMODE.IMMORTALITY.DESC"
+msgid "Creature in the reactor will neither die nor reproduce."
+msgstr "Существо в реакторе не умрёт и не будет размножаться."
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.REPRODUCTIONMODE.REPRODUCTION.NAME"
+msgid "Reproduction"
+msgstr "Воспроизводство"
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.REPRODUCTIONMODE.REPRODUCTION.DESC"
+msgid "Creature in the reactor will lay an egg before it dies."
+msgstr "Существо в реакторе отложит яйцо перед смертью."
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.REPRODUCTIONMODE.FINALDEATH.NAME"
+msgid "Final death"
+msgstr "Окончательная смерть"
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.REPRODUCTIONMODE.FINALDEATH.DESC"
+msgid "Creature in the reactor will die without reproducing."
+msgstr "Существо в реакторе умрёт, не воспроизводясь."
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.DROPHATCHED.NAME"
+msgid "Drop hatched creatures"
+msgstr "Сбрасывать вылупившихся существ"
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.DROPHATCHED.DESC"
+msgid "Reactor drops not only eggs but also hatched creatures on filter change, if enabled."
+msgstr "При изменении фильтра реактор сбрасывает не только яйца, но и вылупившихся существ, если включено."
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.MAXPOWEROUTPUT.NAME"
+msgid "Max power output (W)"
+msgstr "Макс. мощность (Вт)"
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.MAXPOWEROUTPUT.DESC"
+msgid "Reactor cannot produce more than this value."
+msgstr "Реактор не может производить больше этого значения."
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.FIXINCUBATORPRIORITY.NAME"
+msgid "Fix incubator and cracker priority"
+msgstr "Исправить приоритет инкубаторов и разбивалок"
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.FIXINCUBATORPRIORITY.DESC"
+msgid "By default, eggs can be delivered to an incubator from a storage with any priority. It means that if item removal is allowed on the reactor, eggs will be transferred from it to lower priority incubators. Enable the option to fix this behavior."
+msgstr "По умолчанию яйца могут быть доставлены в инкубатор из хранилища с любым приоритетом. Это означает, что если в реакторе разрешено перемещение предметов, яйца будут перенесены из него в инкубаторы с более низким приоритетом. Включите эту опцию, чтобы исправить данное поведение."
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.POWERGENERATIONMODE.NAME"
+msgid "Power generation mode"
+msgstr "Режим производства энергии"
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.POWERGENERATIONMODE.DESC"
+msgid "Determines how the amount of power per creature is calculated."
+msgstr "Определяет способ вычисления количества энергии, производимой существом."
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.POWERGENERATIONMODE.SOLARPANEL.NAME"
+msgid "Solar panel"
+msgstr "Солнечная панель"
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.POWERGENERATIONMODE.SOLARPANEL.DESC"
+msgid "Power is generated similar to solar panels, this means ~25 W for usual shine bug."
+msgstr "Энергия генерируется аналогично солнечным панелям, это означает ~25 Вт для обычного блестячка."
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.POWERGENERATIONMODE.RATIO.NAME"
+msgid "Ratio"
+msgstr "Соотношение"
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.POWERGENERATIONMODE.RATIO.DESC"
+msgid "Power per creature = max power output / max creature limit, for any creature that emits light."
+msgstr "Энергия от существа = макс. мощность / макс. лимит существ, для любого существа, излучающего свет."
+
+msgctxt "Utils.STRINGS.UI.UISIDESCREENS.ITEMSREMOVABLE_SIDE_SCREEN.TITLE"
+msgid "Allowable Storage"
+msgstr "Разрешаемое хранилище"
+
+msgctxt "Utils.STRINGS.UI.UISIDESCREENS.ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTON"
+msgid "Allow items removal"
+msgstr "Разрешить извлечение предметов"
+
+msgctxt "Utils.STRINGS.UI.UISIDESCREENS.ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTONTOOLTIP"
+msgid "Allow to remove items from this storage."
+msgstr "Разрешить доставать предметы из этого хранилища."

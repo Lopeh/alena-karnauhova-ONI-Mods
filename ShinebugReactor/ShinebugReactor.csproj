@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <ModName>Shinebug Reactor</ModName>
+        <UsePLib>true</UsePLib>
+    </PropertyGroup>
+
+    <Import Project="..\Utils\Utils.projitems" Label="Shared" />
+
+</Project>

@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <ModName>Material Colored Tiles and more</ModName>
+        <MinimumSupportedBuild>496912</MinimumSupportedBuild>
+        <UsePLib>true</UsePLib>
+    </PropertyGroup>
+
+    <Import Project="..\Utils\Utils.projitems" Label="Shared" />
+
+</Project>

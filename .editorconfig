@@ -1,0 +1,48 @@
+# Дополнительные сведения о файле EDITORCONFIG: https://aka.ms/editorconfigdocs
+
+[*.cs]
+
+# S125: Sections of code should not be commented out
+dotnet_diagnostic.S125.severity = none
+
+# S1144: Unused private types or members should be removed
+dotnet_diagnostic.S1144.severity = silent
+
+# RCS1213: Remove unused member declaration.
+dotnet_diagnostic.RCS1213.severity = silent
+
+# IDE0051: Удалите неиспользуемые закрытые члены
+dotnet_diagnostic.IDE0051.severity = silent
+
+# S2223: Non-constant static fields should not be visible
+dotnet_diagnostic.S2223.severity = silent
+
+# S1104: Fields should not have public accessibility
+dotnet_diagnostic.S1104.severity = silent
+
+# CA2211: Поля, не являющиеся константами, не должны быть видимыми
+dotnet_diagnostic.CA2211.severity = silent
+
+# S101: Types should be named in PascalCase
+dotnet_diagnostic.S101.severity = none
+
+# CA1034: Вложенные типы не должны быть видимыми
+dotnet_diagnostic.CA1034.severity = silent
+
+# CA1305: Укажите IFormatProvider
+dotnet_diagnostic.CA1305.severity = silent
+
+# IDE0022: Использовать тело блока для методов
+dotnet_diagnostic.IDE0022.severity = none
+
+# CA1724
+dotnet_diagnostic.CA1724.severity = silent
+
+# S2696: Instance members should not write to "static" fields
+dotnet_diagnostic.S2696.severity = silent
+
+# CA1812
+dotnet_diagnostic.CA1812.severity = silent
+
+# CA1707: Идентификаторы не должны содержать символы подчеркивания
+dotnet_diagnostic.CA1707.severity = silent

@@ -1,0 +1,62 @@
+msgid ""
+msgstr ""
+"Application: Oxygen Not IncludedPOT Version: 2.0\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: ru_RU\n"
+
+msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.BRIGHTNESS.NAME"
+msgid "Brightness multiplier"
+msgstr "Коэффициент яркости"
+
+msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.BRIGHTNESS.DESC"
+msgid "The bigger the multiplier, the lighter the colors."
+msgstr "Чем больше коэффициент, тем светлее цвета."
+
+msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.TILES.NAME"
+msgid "Tiles"
+msgstr "Клетки"
+
+msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.TILES.DESC"
+msgid "Note that some tiles (e.g. farm tiles) are not included here."
+msgstr "Обратите внимание, что некоторые клетки (например, агроклетки) не включены в эту опцию."
+
+msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.WALLS.NAME"
+msgid "Walls"
+msgstr "Стены"
+
+msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.WALLS.DESC"
+msgid "Exterior Wall and Tempshift Plate"
+msgstr "Гипсокартон и термальная пластина"
+
+msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.DOORS.NAME"
+msgid "Doors"
+msgstr "Двери"
+
+msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.PIPES.NAME"
+msgid "Pipes"
+msgstr "Трубы"
+
+msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.SCULPTURES.NAME"
+msgid "Sculptures"
+msgstr "Скульптуры"
+
+msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.MOULDING.NAME"
+msgid "Moulding"
+msgstr "Молдинг"
+
+msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.LOGICWIRES.NAME"
+msgid "Logic wires"
+msgstr "Провода автоматики"
+
+msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.FARMTILES.NAME"
+msgid "Farm tiles"
+msgstr "Агроклетки"

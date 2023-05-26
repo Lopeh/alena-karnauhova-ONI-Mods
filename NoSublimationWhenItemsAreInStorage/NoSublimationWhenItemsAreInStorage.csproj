@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <ModName>Stop Sublimation While In Storage</ModName>
+        <MinimumSupportedBuild>469369</MinimumSupportedBuild>
+    </PropertyGroup>
+
+</Project>

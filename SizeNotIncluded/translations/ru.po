@@ -1,0 +1,110 @@
+msgid ""
+msgstr ""
+"Application: Oxygen Not IncludedPOT Version: 2.0\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: ru_RU\n"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.MAPTYPE.NAME"
+msgid "Map Type"
+msgstr "Тип карты"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.MAPTYPE.DESC"
+msgid "The type of small map. Description for each contains map size and percentage size compared to default map."
+msgstr "Тип уменьшенной карты. Описание для каждого содержит размер карты и процентное соотношение в сравнении со стандартной картой."
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.SMALLEST.NAME"
+msgid "Smallest"
+msgstr "Наименьшая"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.SMALLEST.DESC"
+msgid "128x192 size, 25% area"
+msgstr "128x192 размер, 25% площадь"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.SMALL.NAME"
+msgid "Small"
+msgstr "Маленькая"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.SMALL.DESC"
+msgid "160x224 size, 40% area"
+msgstr "160x224 размер, 40% площадь"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.MEDIUM.NAME"
+msgid "Medium"
+msgstr "Средняя"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.MEDIUM.DESC"
+msgid "192x288 size, 55% area"
+msgstr "192x288 размер, 55% площадь"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.LARGE.NAME"
+msgid "Large"
+msgstr "Большая"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.LARGE.DESC"
+msgid "224x320 size, 75% area"
+msgstr "224x320 размер, 75% площадь"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.DEFAULT.NAME"
+msgid "Default"
+msgstr "Стандартная"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.DEFAULT.DESC"
+msgid "256x384 size, 100% area"
+msgstr "256x384 размер, 100% площадь"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.SMALLESTTALL.NAME"
+msgid "Smallest Tall"
+msgstr "Наименьшая высокая"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.SMALLESTTALL.DESC"
+msgid "96x224 size, 25% area"
+msgstr "96x224 размер, 25% площадь"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.SMALLTALL.NAME"
+msgid "Small Tall"
+msgstr "Маленькая высокая"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.SMALLTALL.DESC"
+msgid "128x288 size, 40% area"
+msgstr "128x288 размер, 40% площадь"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.MEDIUMTALL.NAME"
+msgid "Medium Tall"
+msgstr "Средняя высокая"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.MEDIUMTALL.DESC"
+msgid "160x320 size, 55% area"
+msgstr "160x320 размер, 55% площадь"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.LARGETALL.NAME"
+msgid "Large Tall"
+msgstr "Большая высокая"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.LARGETALL.DESC"
+msgid "192x384 size, 75% area"
+msgstr "192x384 размер, 75% площадь"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.DEFAULTTALL.NAME"
+msgid "Default Tall"
+msgstr "Стандартная высокая"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.SIZENOTINCLUDEDMAPTYPE.DEFAULTTALL.DESC"
+msgid "224x416 size, 100% area"
+msgstr "224x416 размер, 100% площадь"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.GEYSERCOUNT.NAME"
+msgid "Generic geyser count"
+msgstr "Количество гейзеров"
+
+msgctxt "SizeNotIncluded.STRINGS.OPTIONS.GEYSERCOUNT.DESC"
+msgid "Generic (non-guaranteed) geysers count. Vanilla value is 12."
+msgstr "Количество негарантированных гейзеров. Стандартное значение - 12."

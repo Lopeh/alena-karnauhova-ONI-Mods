@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project>
+    <PropertyGroup>
+        <AssemblySearchPaths>
+            $(GameFolder);
+            $(AssemblySearchPaths)
+        </AssemblySearchPaths>
+    </PropertyGroup>
+
+    <!--Target Name="AfterResolveReferences" DependsOnTargets="ClearGameFolderCopyLocal" />
+
+  <Target Name="ClearGameFolderCopyLocal">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="$(GameFolder)\*" />
+    </ItemGroup>
+  </Target-->
+
+    <Target Name="ILRepack" AfterTargets="Build" Condition="'$(UsePLib)' == 'true'">
+        <ItemGroup>
+            <InputAssemblies Include="$(TargetDir)\*.dll" />
+        </ItemGroup>
+
+        <ILRepack TargetPlatformVersion="v4"
+                  TargetKind="SameAsPrimaryAssembly"
+                  InputAssemblies="@(InputAssemblies)"
+                  Wildcards="true"
+                  LibraryPath="$(GameFolder)"
+                  Parallel="true"
+                  Internalize="true"
+                  OutputFile="$(TargetPath)"/>
+    </Target>
+
+    <Target Name="GenerateYAML" AfterTargets="ILRepack">
+        <PropertyGroup>
+            <ModInfoFile>$(TargetDir)\mod_info.yaml</ModInfoFile>
+            <ModDescriptionFile>$(TargetDir)\mod.yaml</ModDescriptionFile>
+            <ModInfoFileContent>
+supportedContent: $(SupportedContent)
+minimumSupportedBuild: $(MinimumSupportedBuild)
+version: $([System.DateTime]::UtcNow.ToString("yyyy.MM.dd"));
+APIVersion: $(APIVersion)
+            </ModInfoFileContent>
+            <ModDescriptionFileContent>
+title: "$(ModName)"
+description: "$(Description)"
+staticID: $(Authors).$(AssemblyName)
+            </ModDescriptionFileContent>
+        </PropertyGroup>
+        <WriteLinesToFile File="$(ModInfoFile)" Overwrite="true" Lines="$(ModInfoFileContent)"/>
+        <WriteLinesToFile File="$(ModDescriptionFile)" Overwrite="true" Lines="$(ModDescriptionFileContent)"/>
+    </Target>
+
+    <Target Name="CopyArtifactsToInstallFolder" AfterTargets="GenerateYAML">
+        <PropertyGroup>
+            <InstallFolder>$(ModFolder)\$(ProjectName)</InstallFolder>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <ModFiles Include="$(TargetDir)\**\*.*" />
+        </ItemGroup>
+
+        <Copy SourceFiles="@(ModFiles)"
+              DestinationFolder="$(InstallFolder)\%(RecursiveDir)"
+              SkipUnchangedFiles="true" />
+    </Target>
+</Project>

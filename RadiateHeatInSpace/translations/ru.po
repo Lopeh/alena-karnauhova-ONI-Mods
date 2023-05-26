@@ -1,0 +1,102 @@
+msgid ""
+msgstr ""
+"Application: Oxygen Not IncludedPOT Version: 2.0\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: ru_RU\n"
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDINGS.PREFABS.RADIATIVETILE.NAME"
+msgid "<link=\"RADIATIVETILE\">Radiative Tile</link>"
+msgstr "<link=\"RADIATIVETILE\">Излучающая клетка</link>"
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDINGS.PREFABS.RADIATIVETILE.DESC"
+msgid "Perfect for building a sauna, if the sauna were in space. On second thought, not so perfect for building a sauna."
+msgstr "Идеальна для постройки сауны, если бы сауна была в космосе. На второй взгляд, не так уж хороша для постройки сауны."
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDINGS.PREFABS.RADIATIVETILE.EFFECT"
+msgid "A tile that passively radiates <link=\"HEAT"\>heat</link> to space. More effective the hotter it is."
+msgstr "Клетка, которая пассивно излучает <link=\"HEAT"\>тепло</link> в космос. Чем выше температура, тем эффективнее."
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_NOTINSPACE.NAME"
+msgid "Not in space"
+msgstr "Не в космосе"
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_NOTINSPACE.TOOLTIP"
+msgid "This building is not fully in space and is not radiating heat."
+msgstr "Это строение не находится полностью в космосе и не излучает тепло."
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_TOOCOLD.NAME"
+msgid "Too cold"
+msgstr "Слишком холодно"
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_TOOCOLD.TOOLTIP"
+msgid "This building is too cold to radiate heat."
+msgstr "Это строение слишком холодное, чтобы излучать тепло."
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_RADIATING.NAME"
+msgid "Radiating {0}"
+msgstr "Излучает {0}"
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_RADIATING.TOOLTIP"
+msgid "This building is currently radiating heat at {0}."
+msgstr "Это строение сейчас излучает {0} тепла."
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_NOTINSUNLIGHT.NAME"
+msgid "Not in sunlight"
+msgstr "Не под солнцем"
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_NOTINSUNLIGHT.TOOLTIP"
+msgid "This building is not in sunlight and is not heated by it."
+msgstr "Это строение не находится на солнечном свету и не нагревается от него."
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_TOOHOT.NAME"
+msgid "Too hot"
+msgstr "Слишком горячо"
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_TOOHOT.TOOLTIP"
+msgid "This building is too hot to absorb heat from sun."
+msgstr "Это строение слишком горячее, чтобы поглощать тепло от солнца."
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_ABSORBING.NAME"
+msgid "Absorbing {0}"
+msgstr "Поглощает {0}"
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_ABSORBING.TOOLTIP"
+msgid "This building is currently absorbing heat from sun at {0}."
+msgstr "Это строение сейчас поглощает {0} тепла от солнца."
+
+msgctxt "RadiateHeatInSpace.STRINGS.OPTIONS.CATEGORIES.SUNRADIATION"
+msgid "Sun radiation"
+msgstr "Излучение солнца"
+
+msgctxt "RadiateHeatInSpace.STRINGS.OPTIONS.SUNLIGHTHEAT.NAME"
+msgid "Sunlight heat"
+msgstr "Нагрев солнцем"
+
+msgctxt "RadiateHeatInSpace.STRINGS.OPTIONS.SUNLIGHTHEAT.DESC"
+msgid "Buildings in sunlight will be heated if enabled."
+msgstr "Строения на солнечном свету будут нагреваться, если включено."
+
+msgctxt "RadiateHeatInSpace.STRINGS.OPTIONS.SUNLIGHTEFFICIENCY.NAME"
+msgid "Sun light efficiency"
+msgstr "Световая отдача солнца"
+
+msgctxt "RadiateHeatInSpace.STRINGS.OPTIONS.SUNLIGHTEFFICIENCY.DESC"
+msgid "Lumen per watt ratio of the sun. The more light efficiency, the less heat energy."
+msgstr "Соотношение люмен/ватт для солнца. Чем больше светоотдача, тем меньше тепловая энергия."
+
+msgctxt "RadiateHeatInSpace.STRINGS.OPTIONS.MAXTEMPERATURE.NAME"
+msgid "Maximum temperature (K)"
+msgstr "Максимальная температура (K)"
+
+msgctxt "RadiateHeatInSpace.STRINGS.OPTIONS.MAXTEMPERATURE.DESC"
+msgid "Sun cannot heat a building over this temperature."
+msgstr "Солнце не может нагреть строение выше этой температуры."

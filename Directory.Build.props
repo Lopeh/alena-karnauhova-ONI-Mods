@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project>
+    <Import Condition=" !Exists('Directory.Build.props.user') " Project="Directory.Build.props.default" />
+    <Import Condition=" Exists('Directory.Build.props.user') " Project="Directory.Build.props.user" />
+
+    <PropertyGroup>
+        <SupportedContent>VANILLA_ID, EXPANSION1_ID</SupportedContent>
+        <MinimumSupportedBuild>525812</MinimumSupportedBuild>
+        <APIVersion>2</APIVersion>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TargetFramework>net471</TargetFramework>
+        <Authors>shelena_malk</Authors>
+        <Product>ONI_Mods</Product>
+        <DebugType>none</DebugType>
+        <DebugSymbols>false</DebugSymbols>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+        <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest-all</AnalysisLevel>
+    </PropertyGroup>
+
+    <ItemDefinitionGroup>
+        <Reference Private="false" />
+        <ProjectReference Private="true" />
+    </ItemDefinitionGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
+        <Reference Include="0Harmony" />
+        <Reference Include="Assembly-CSharp" />
+        <Reference Include="Assembly-CSharp-firstpass" />
+        <Reference Include="UnityEngine" />
+        <Reference Include="UnityEngine.CoreModule" />
+        <!--Reference Include="UnityEngine.InputLegacyModule" /-->
+    </ItemGroup>
+    <ItemGroup Condition="'$(UsePLib)' == 'true'">
+        <PackageReference Include="PLib" Version="4.13" />
+        <Reference Include="Newtonsoft.Json" />
+        <Reference Include="Unity.TextMeshPro" />
+        <Reference Include="UnityEngine.TextRenderingModule" />
+        <Reference Include="UnityEngine.UI" />
+        <Reference Include="UnityEngine.UIModule" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="$(ProjectDir)preview.*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>%(RecursiveDir)/%(FileName)%(Extension)</Link>
+        </None>
+        <None Include="$(ProjectDir)anim\**\*.*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>anim\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+        </None>
+        <None Include="$(ProjectDir)translations\*.po">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>translations\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+        </None>
+        <None Include="$(ProjectDir)worldgen\**\*.*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>worldgen\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+        </None>
+        <None Include="$(ProjectDir)templates\**\*.*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>templates\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+        </None>
+    </ItemGroup>
+</Project>

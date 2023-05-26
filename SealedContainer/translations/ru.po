@@ -1,0 +1,54 @@
+msgid ""
+msgstr ""
+"Application: Oxygen Not IncludedPOT Version: 2.0\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: ru_RU\n"
+
+msgctxt "SealedContainer.STRINGS.BUILDINGS.PREFABS.SEALEDCONTAINER.NAME"
+msgid "<link=\"SEALEDCONTAINER\">Sealed Container</link>"
+msgstr "<link=\"SEALEDCONTAINER\">Герметичный контейнер</link>"
+
+msgctxt "SealedContainer.STRINGS.BUILDINGS.PREFABS.SEALEDCONTAINER.DESC"
+msgid "Nicely sealed container. Its <link=\"ELEMENTSSOLID"\>contents</link> will stay forever!"
+msgstr "Хорошо герметизированный контейнер. Его <link=\"ELEMENTSSOLID"\>содержимое</link> будет храниться вечно!"
+
+msgctxt "SealedContainer.STRINGS.BUILDINGS.PREFABS.SEALEDCONTAINER.EFFECT"
+msgid "Prevents its <link=\"ELEMENTSSOLID"\>contents</link> from sublimating."
+msgstr "Предотвращает сублимацию его <link=\"ELEMENTSSOLID"\>содержимого</link>."
+
+msgctxt "SealedContainer.STRINGS.BUILDINGS.PREFABS.INSULATEDCONTAINER.NAME"
+msgid "<link=\"INSULATEDCONTAINER\">Insulated Container</link>"
+msgstr "<link=\"INSULATEDCONTAINER\">Теплоизолированный контейнер</link>"
+
+msgctxt "SealedContainer.STRINGS.BUILDINGS.PREFABS.INSULATEDCONTAINER.DESC"
+msgid "This container is not only sealed but also insulated. Force all these <link=\"HEAT"\>DTUs</link> to stay where they are!"
+msgstr "Этот контейнер не только герметичен, но и теплоизолирован. Заставьте все эти <link=\"HEAT"\>ДЕТы</link> оставаться там, где они есть!"
+
+msgctxt "SealedContainer.STRINGS.BUILDINGS.PREFABS.INSULATEDCONTAINER.EFFECT"
+msgid "Prevents sublimation and heat exchange of its <link=\"ELEMENTSSOLID"\>contents</link>."
+msgstr "Предотвращает сублимацию и теплообмен его <link=\"ELEMENTSSOLID"\>содержимого</link>."
+
+msgctxt "SealedContainer.STRINGS.OPTIONS.CAPACITY.NAME"
+msgid "Capacity (kg)"
+msgstr "Вместимость (кг)"
+
+msgctxt "SealedContainer.STRINGS.OPTIONS.CAPACITY.DESC"
+msgid "Determines max capacity of the container."
+msgstr "Устанавливает максимальную вместимость контейнера."
+
+msgctxt "SealedContainer.STRINGS.OPTIONS.REQUIRESUPERINSULATOR.NAME"
+msgid "Insulated Container requires SuperInsulator"
+msgstr "Теплоизолированный контейнер требует суперизолятора"
+
+msgctxt "SealedContainer.STRINGS.OPTIONS.REQUIRESUPERINSULATOR.DESC"
+msgid "Only Insulation can be used for Insulated Container construction if enabled."
+msgstr "Теплоизолированный контейнер может быть построен только из Теплоизоляции, если включено."
