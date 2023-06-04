@@ -2,8 +2,8 @@
 using UnityEngine;
 using PeterHan.PLib.UI;
 
-namespace Utils
-{
+//namespace Utils
+//{
     public class ItemsRemovableSideScreen : SideScreenContent
     {
         protected MultiToggle allowRemoveItemsToggle;
@@ -21,12 +21,15 @@ namespace Utils
             PCheckBox checkBox = new PCheckBox("ItemsRemovableCheckbox").AddOnRealize(s =>
             {
                 allowRemoveItemsToggle = s.GetComponent<MultiToggle>();
-                RefreshUI();
+                if (targetItemsRemovable)
+                {
+                    RefreshUI();
+                }
             });
             checkBox.CheckSize = new Vector2(26, 26);
-            checkBox.Text = STRINGS.UI.UISIDESCREENS.ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTON;
+            checkBox.Text = Utils.STRINGS.UI.UISIDESCREENS.ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTON;
             checkBox.TextStyle = PUITuning.Fonts.TextDarkStyle;
-            checkBox.ToolTip = STRINGS.UI.UISIDESCREENS.ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTONTOOLTIP;
+            checkBox.ToolTip = Utils.STRINGS.UI.UISIDESCREENS.ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTONTOOLTIP;
             checkBox.OnChecked += (s, state) =>
             {
                 targetItemsRemovable.AllowItemRemoval = !targetItemsRemovable.AllowItemRemoval;
@@ -41,15 +44,11 @@ namespace Utils
             BoxLayoutGroup layoutGroup = gameObject.GetComponent<BoxLayoutGroup>();
             if (layoutGroup)
             {
-                layoutGroup.Params = new BoxLayoutParams()
-                {
-                    Alignment = TextAnchor.MiddleLeft,
-                    Margin = new RectOffset(16, 16, 4, 4),
-                    //Spacing = 8f,
-                };
                 layoutGroup.Params.Alignment = TextAnchor.MiddleLeft;
+                layoutGroup.Params.Margin = new RectOffset(16, 16, 4, 4);
+                //layoutGroup.Params.Spacing = 8f;
             }
-            CreateUI().AddTo(gameObject, 0);
+            CreateUI().AddTo(gameObject, -1);
             ContentContainer = gameObject;
         }
 
@@ -61,11 +60,20 @@ namespace Utils
         public override void SetTarget(GameObject target)
         {
             base.SetTarget(target);
-            if (target != null)
+            if (target)
             {
                 targetItemsRemovable = target.GetComponent<ItemsRemovable>();
-                //RefreshUI();
+                if (allowRemoveItemsToggle)
+                {
+                    RefreshUI();
+                }
             }
         }
+
+        public override void ClearTarget()
+        {
+            targetItemsRemovable = null;
+            base.ClearTarget();
+        }
     }
-}
+//}

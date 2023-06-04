@@ -18,7 +18,6 @@ namespace ShinebugReactor
     {
         public const string EGG_POSTFIX = "Egg";
         public const string BABY_POSTFIX = "Baby";
-        public static float HeatPerSecond;
 
         #region Components
         [MyCmpReq]
@@ -122,6 +121,7 @@ namespace ShinebugReactor
             false, OverlayModes.Radiation.ID);
         public static StatusItem OperatingEnergyStatusItem;
         #endregion
+        protected float emitRads;
         /*[Serialize]
         private List<ShinebugEggSimulator> _shinebugEggs;*/
         [Serialize]
@@ -173,38 +173,6 @@ namespace ShinebugReactor
         public string GetSliderTooltipKey(int index) => "STRINGS.UI.UISIDESCREENS.RADBOLTTHRESHOLDSIDESCREEN.TOOLTIP";
         public string GetSliderTooltip() => string.Format(Strings.Get("STRINGS.UI.UISIDESCREENS.RADBOLTTHRESHOLDSIDESCREEN.TOOLTIP"), ParticleThreshold);
         #endregion
-        /*private void InitializeStatusItem()
-        {
-            if (this.operatingEnergyStatusItem != null)
-                return;
-            this.operatingEnergyStatusItem = new StatusItem("OperatingEnergy", "BUILDING", "", StatusItem.IconType.Info, NotificationType.Neutral, false, OverlayModes.None.ID);
-            this.operatingEnergyStatusItem.resolveStringCallback = (Func<string, object, string>)((str, ev_data) =>
-            {
-                int key = (int)ev_data;
-                StructureTemperaturePayload payload = this.GetPayload(StructureTemperatureComponents.handleInstanceMap[key]);
-                if (str != (string)BUILDING.STATUSITEMS.OPERATINGENERGY.TOOLTIP)
-                {
-                    try
-                    {
-                        str = string.Format(str, (object)GameUtil.GetFormattedHeatEnergy(payload.TotalEnergyProducedKW * 1000f));
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.LogWarning((object)ex);
-                        Debug.LogWarning((object)BUILDING.STATUSITEMS.OPERATINGENERGY.TOOLTIP);
-                        Debug.LogWarning((object)str);
-                    }
-                }
-                else
-                {
-                    string str1 = "";
-                    foreach (StructureTemperaturePayload.EnergySource energySource in payload.energySourcesKW)
-                        str1 += string.Format((string)BUILDING.STATUSITEMS.OPERATINGENERGY.LINEITEM, (object)energySource.source, (object)GameUtil.GetFormattedHeatEnergy(energySource.value * 1000f, GameUtil.HeatEnergyFormatterUnit.DTU_S));
-                    str = string.Format(str, (object)GameUtil.GetFormattedHeatEnergy(payload.TotalEnergyProducedKW * 1000f, GameUtil.HeatEnergyFormatterUnit.DTU_S), (object)str1);
-                }
-                return str;
-            });
-        }*/
         protected override void OnPrefabInit()
         {
             base.OnPrefabInit();
@@ -222,9 +190,8 @@ namespace ShinebugReactor
             //Unsubscribe((int)GameHashes.OnStorageChange, fsCreaturesOnStorageChanged);
             //fsOnStorageChanged = fsEggsOnStorageChanged + fsCreaturesOnStorageChanged;
 
-            /*OperatingEnergyStatusItem = Traverse.Create(GameComps.StructureTemperatures).Field("operatingEnergyStatusItem")
-                .GetValue<StatusItem>();*/
-
+            OperatingEnergyStatusItem = Traverse.Create(GameComps.StructureTemperatures).Field("operatingEnergyStatusItem")
+                .GetValue<StatusItem>();
             Db.Get().BuildingStatusItems.Add(CreatureCountStatus);
             Db.Get().BuildingStatusItems.Add(EggCountStatus);
             Db.Get().BuildingStatusItems.Add(WattageStatus);
@@ -244,10 +211,9 @@ namespace ShinebugReactor
             Subscribe((int)GameHashes.DeconstructComplete, OnDeconstruct);
             filteredStorageEggs.FilterChanged();
             //filteredStorageCreatures.FilterChanged();
+
             if (particleStorage)
             {
-                BuildingDef HEPSpawnerBuildingDef = Assets.GetBuildingDef(HighEnergyParticleSpawnerConfig.ID);
-                HeatPerSecond = HEPSpawnerBuildingDef.SelfHeatKilowattsWhenActive + HEPSpawnerBuildingDef.ExhaustKilowattsWhenActive;
                 Subscribe((int)GameHashes.LogicEvent, OnLogicValueChanged);
 
                 radiationEmitter.SetEmitting(true);
@@ -263,10 +229,6 @@ namespace ShinebugReactor
             {
                 selectable.AddStatusItem(HEPStorageStatus, this);
             }
-
-            /*selectable.SetStatusItem(Db.Get().StatusItemCategories.OperatingEnergy,
-                OperatingEnergyStatusItem, GameComps.StructureTemperatures
-                .GetPayload(structureTemperature).simHandleCopy);*/
         }
         protected override void OnCleanUp()
         {
@@ -483,7 +445,8 @@ namespace ShinebugReactor
                 }
                 if (particleStorage)
                 {
-                    radiationEmitter.emitRads = rad * ShinebugReactorConfig.EmitLeakRate;
+                    emitRads = rad * ShinebugReactorConfig.EmitLeakRate;
+                    //radiationEmitter.emitRads = rad * ShinebugReactorConfig.EmitLeakRate;
                     if (isLogicActive)
                     {
                         if (CurrentWattage >= ShinebugReactorConfig.WattageRequired)
@@ -510,7 +473,8 @@ namespace ShinebugReactor
                 {
                     CurrentHEP = rad * HighEnergyParticleSpawnerConfig.HEP_PER_RAD;
                     GameComps.StructureTemperatures.ProduceEnergy(structureTemperature,
-                        HeatPerSecond * dt, GameStrings.BUILDING.STATUSITEMS.OPERATINGENERGY.OPERATING, dt);
+                        ShinebugReactorConfig.HeatPerSecond * dt,
+                        GameStrings.BUILDING.STATUSITEMS.OPERATINGENERGY.OPERATING, dt);
                     if (particleStorage.RemainingCapacity() > 0f)
                     {
                         particleStorage.Store(Mathf.Min((CurrentHEP / 600f) * dt,
@@ -520,10 +484,7 @@ namespace ShinebugReactor
             }
             else
             {
-                if (radiationEmitter)
-                {
-                    radiationEmitter.emitRads = 0f;
-                }
+                emitRads = 0f;
             }
             if (CurrentWattage <= 0f)
             {
@@ -538,7 +499,11 @@ namespace ShinebugReactor
             {
                 SpawnHEP();
             }
-            radiationEmitter?.Refresh();
+            if (radiationEmitter && radiationEmitter.emitRads != emitRads)
+            {
+                radiationEmitter.emitRads = emitRads;
+                radiationEmitter.Refresh();
+            }
             if (Options.Instance.ReproductionMode != Options.ReproductionModeType.Immortality)
             {
                 bool dirty = false;
@@ -589,6 +554,9 @@ namespace ShinebugReactor
                     currentHEPStatus = NoHEPProductionWarningStatus;
                 }
                 selectable.SetStatusItem(Db.Get().StatusItemCategories.Stored, currentHEPStatus, this);
+                selectable.SetStatusItem(Db.Get().StatusItemCategories.OperatingEnergy,
+                    (currentHEPStatus == HEPStatus) ? OperatingEnergyStatusItem : null,
+                    structureTemperature.index);
                 /*selectable.SetStatusItem(Db.Get().StatusItemCategories.Stored,
                 //statusHandles[2] = selectable.ReplaceStatusItem(statusHandles[2],
                     CurrentWattage > 0f || particleStorage.IsEmpty() ?

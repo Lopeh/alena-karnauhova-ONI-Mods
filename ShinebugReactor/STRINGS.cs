@@ -65,6 +65,7 @@ namespace ShinebugReactor
                 public static class TOOLTIPS
                 {
                     public static LocString SHINEBUGREACTORREQUIRESPOWER = "Should generate at least " + FormatAsNegativeRate("{0}") + " of power to produce radbolts";
+                    public static LocString SHINEBUGREACTORHEATGENERATED = "Generates " + FormatAsPositiveRate("{0}") + " per second while producing radbolts";
                 }
             }
         }

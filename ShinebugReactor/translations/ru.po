@@ -89,6 +89,10 @@ msgctxt "ShinebugReactor.STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.SHINEBUGREACTORREQU
 msgid "Should generate at least <style=\"consumed\">{0}</style> of power to produce radbolts"
 msgstr "Должен производить минимум <style=\"consumed\">{0}</style> энергии для генерации радболтов"
 
+msgctxt "ShinebugReactor.STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.SHINEBUGREACTORHEATGENERATED"
+msgid "Generates <style=\"produced\">{0}</style> per second while producing radbolts"
+msgstr "Вырабатывает <style=\"produced\">{0}</style> в сек., когда производит радболты"
+
 msgctxt "ShinebugReactor.STRINGS.OPTIONS.REPRODUCTIONMODE.NAME"
 msgid "Reproduction mode"
 msgstr "Режим воспроизводства"

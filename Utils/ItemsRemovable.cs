@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using KSerialization;
-using UnityEngine;
-using static Storage;
+﻿using KSerialization;
 
 //namespace Utils
 //{
@@ -29,9 +25,9 @@ using static Storage;
             storage.RenotifyAll();
         }
 
-        protected override void OnPrefabInit()
+        protected override void OnSpawn()
         {
-            base.OnPrefabInit();
+            base.OnSpawn();
             UpdateStorageModifiers();
         }
     }

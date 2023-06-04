@@ -12,13 +12,14 @@ namespace ShinebugReactor
         public const string ID = "ShinebugReactor";
         //public const string category = "Power";
         //public const string tech = "RenewableEnergy";
-        public const int width = 10;
+        public const int width = 9;//10
         public const int height = 5;
         //public const float WattageRating = BUILDINGS.ENERGY_CONSUMPTION_WHEN_ACTIVE.TIER7;
         public const float WattageRequired = BUILDINGS.ENERGY_CONSUMPTION_WHEN_ACTIVE.TIER5;
         //public const float PowerSaveEnergyRequired = BUILDINGS.ENERGY_CONSUMPTION_WHEN_ACTIVE.TIER3;
-        public const int EmitRange = 3;
+        public const int EmitRange = 4;
         public const float EmitLeakRate = 0.1f;
+        public static float HeatPerSecond;
         public const string FIRE_PORT_ID = "ShinebugReactorFirePort";
         public const string FULL_PORT_ID = "ShinebugReactorFullPort";
         public static PBuilding PBuilding = new PBuilding(ID, STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.NAME)
@@ -29,14 +30,14 @@ namespace ShinebugReactor
             HP = BUILDINGS.HITPOINTS.TIER0,
             ConstructionTime = BUILDINGS.CONSTRUCTION_TIME_SECONDS.TIER4,
             Ingredients =
-                {
-                    new BuildIngredient(MATERIALS.GLASS, tier: 5),
-                    //new BuildIngredient(MATERIALS.REFINED_METAL, tier: 3),
-                    //new BuildIngredient(MATERIALS.BUILDABLERAW, tier: 3),
-                    new BuildIngredient(MATERIALS.BUILDABLERAW, tier: 4),
-                },
+            {
+                new BuildIngredient(MATERIALS.GLASS, tier: 5),
+                //new BuildIngredient(MATERIALS.REFINED_METAL, tier: 3),
+                //new BuildIngredient(MATERIALS.BUILDABLERAW, tier: 3),
+                new BuildIngredient(MATERIALS.BUILDABLERAW, tier: 4),
+            },
             Placement = BuildLocationRule.Anywhere,
-            IndustrialMachine = true,
+            //IndustrialMachine = true,
             AudioCategory = "HollowMetal",
             AudioSize = "large",
             ViewMode = OverlayModes.Power.ID,
@@ -92,6 +93,7 @@ namespace ShinebugReactor
                     STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.LOGIC_PORT_FIRE_ACTIVE,
                     STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.LOGIC_PORT_FIRE_INACTIVE)
                 };
+                ConfigureDescriptors(buildingDef);
             }
             buildingDef.LogicOutputPorts = new List<LogicPorts.Port>()
             {
@@ -103,6 +105,25 @@ namespace ShinebugReactor
             buildingDef.UtilityInputOffset = new CellOffset(-4, 1);
             buildingDef.InputConduitType = ConduitType.Solid;
             return buildingDef;
+        }
+        public void ConfigureDescriptors(BuildingDef buildingDef)
+        {
+            List<Descriptor> descriptors = buildingDef.EffectDescription
+                ?? (buildingDef.EffectDescription = new List<Descriptor>());
+
+            string formattedWattage = GameUtil.GetFormattedWattage(WattageRequired);
+            descriptors.Add(new Descriptor(
+                string.Format(GameStrings.UI.BUILDINGEFFECTS.REQUIRESPOWER, formattedWattage),
+                string.Format(STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.SHINEBUGREACTORREQUIRESPOWER, formattedWattage),
+                Descriptor.DescriptorType.Requirement));
+
+            BuildingDef HEPSpawnerBuildingDef = Assets.GetBuildingDef(HighEnergyParticleSpawnerConfig.ID);
+            HeatPerSecond = HEPSpawnerBuildingDef.SelfHeatKilowattsWhenActive + HEPSpawnerBuildingDef.ExhaustKilowattsWhenActive;
+
+            string formattedHeatEnergy = GameUtil.GetFormattedHeatEnergy(HeatPerSecond * 1000f);
+            descriptors.Add(new Descriptor(
+                string.Format(GameStrings.UI.BUILDINGEFFECTS.HEATGENERATED, formattedHeatEnergy),
+                string.Format(STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.SHINEBUGREACTORHEATGENERATED, formattedHeatEnergy)));
         }
 
         public override void ConfigureBuildingTemplate(GameObject go, Tag prefab_tag) => PBuilding.ConfigureBuildingTemplate(go);
@@ -136,18 +157,11 @@ namespace ShinebugReactor
             if (DlcManager.FeatureRadiationEnabled())
             {
                 go.AddOrGet<HighEnergyParticleStorage>().capacity = HighEnergyParticleSpawnerConfig.MAX_SLIDER + 1f;
-
-                string formattedWattage = GameUtil.GetFormattedWattage(WattageRequired);
-                Descriptor descriptor = new Descriptor(
-                    string.Format(GameStrings.UI.BUILDINGEFFECTS.REQUIRESPOWER, formattedWattage),
-                    string.Format(STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.SHINEBUGREACTORREQUIRESPOWER, formattedWattage),
-                    Descriptor.DescriptorType.Requirement);
-                BuildingDef def = go.GetComponent<Building>().Def;
-                (def.EffectDescription ?? (def.EffectDescription = new List<Descriptor>())).Add(descriptor);
                 ConfigureRadiation(go);
             }
             go.AddOrGet<ShinebugReactor>();
             ConfigureLight(go);
+            ConfigureVisualSize(go);
         }
 
         public RadiationEmitter ConfigureRadiation(GameObject go)
@@ -157,9 +171,8 @@ namespace ShinebugReactor
             emitter.radiusProportionalToRads = false;
             emitter.emitRadiusX = EmitRange;
             emitter.emitRadiusY = EmitRange;
-            emitter.emissionOffset = new Vector3(0f, 3f);
-            //emitter.emitRate = EmitLeakRate;
-            emitter.emitRads = 0f;
+            emitter.emissionOffset = new Vector3(0f, (int)(height / 2f));
+            emitter.emitRate = 0.1f;
             return emitter;
         }
         public Light2D ConfigureLight(GameObject go)
@@ -172,7 +185,7 @@ namespace ShinebugReactor
             light.shape = LightShape.Circle;
             light.Angle = 0f;
             light.Range = EmitRange;
-            light.Offset = new Vector2(0f, 3f);
+            light.Offset = new Vector2(0f, (int)(height / 2f));
             light.Lux = 1800;
             return light;
             /*for (int i = 0; i < 4; ++i)
@@ -188,6 +201,24 @@ namespace ShinebugReactor
                 light2D.drawOverlay = true;
                 light2D.Lux = 1800;
             }*/
+        }
+
+        public void ConfigureVisualSize(GameObject go)
+        {
+            var animController = go.GetComponent<KBatchedAnimController>();
+            animController.animWidth = 0.9f;
+            animController.animHeight = 0.9f;
+        }
+
+        public override void DoPostConfigurePreview(BuildingDef def, GameObject go)
+        {
+            base.DoPostConfigurePreview(def, go);
+            ConfigureVisualSize(go);
+        }
+        public override void DoPostConfigureUnderConstruction(GameObject go)
+        {
+            base.DoPostConfigureUnderConstruction(go);
+            ConfigureVisualSize(go);
         }
     }
 }

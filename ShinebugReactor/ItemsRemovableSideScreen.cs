@@ -6,8 +6,7 @@ namespace ShinebugReactor
 {
     public class ItemsRemovableSideScreen : SideScreenContent
     {
-        //[SerializeField]
-        protected /*KToggle*/MultiToggle allowRemoveItemsToggle;
+        protected MultiToggle allowRemoveItemsToggle;
         protected ItemsRemovable targetItemsRemovable;
 
         public void RefreshUI()
@@ -22,7 +21,10 @@ namespace ShinebugReactor
             PCheckBox checkBox = new PCheckBox("ItemsRemovableCheckbox").AddOnRealize(s =>
             {
                 allowRemoveItemsToggle = s.GetComponent<MultiToggle>();
-                RefreshUI();
+                if (targetItemsRemovable)
+                {
+                    RefreshUI();
+                }
             });
             checkBox.CheckSize = new Vector2(26, 26);
             checkBox.Text = Utils.STRINGS.UI.UISIDESCREENS.ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTON;
@@ -42,15 +44,11 @@ namespace ShinebugReactor
             BoxLayoutGroup layoutGroup = gameObject.GetComponent<BoxLayoutGroup>();
             if (layoutGroup)
             {
-                layoutGroup.Params = new BoxLayoutParams()
-                {
-                    Alignment = TextAnchor.MiddleLeft,
-                    Margin = new RectOffset(16, 16, 4, 4),
-                    //Spacing = 8f,
-                };
                 layoutGroup.Params.Alignment = TextAnchor.MiddleLeft;
+                layoutGroup.Params.Margin = new RectOffset(16, 16, 4, 4);
+                //layoutGroup.Params.Spacing = 8f;
             }
-            CreateUI().AddTo(gameObject, 0);
+            CreateUI().AddTo(gameObject, -1);
             ContentContainer = gameObject;
         }
 
@@ -62,11 +60,20 @@ namespace ShinebugReactor
         public override void SetTarget(GameObject target)
         {
             base.SetTarget(target);
-            if (target != null)
+            if (target)
             {
                 targetItemsRemovable = target.GetComponent<ItemsRemovable>();
-                //RefreshUI();
+                if (allowRemoveItemsToggle)
+                {
+                    RefreshUI();
+                }
             }
+        }
+
+        public override void ClearTarget()
+        {
+            targetItemsRemovable = null;
+            base.ClearTarget();
         }
     }
 }
