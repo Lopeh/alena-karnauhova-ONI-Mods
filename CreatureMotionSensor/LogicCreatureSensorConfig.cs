@@ -36,7 +36,10 @@ namespace Creature_Motion_Sensor
             return buildingDef;
         }
 
-        public override void DoPostConfigurePreview(BuildingDef def, GameObject go) => AddVisualizer(go, true);
+        public override void DoPostConfigurePreview(BuildingDef def, GameObject go)
+        {
+            AddVisualizer(go);
+        }
 
         public override void DoPostConfigureComplete(GameObject go)
         {
@@ -44,18 +47,19 @@ namespace Creature_Motion_Sensor
             logicCreatureSensor.defaultState = false;
             logicCreatureSensor.manuallyControlled = false;
             //logicCreatureSensor.pickupRange = RANGE;
-            AddVisualizer(go, false);
+            AddVisualizer(go);
             go.GetComponent<KPrefabID>().AddTag(GameTags.OverlayInFrontOfConduits);
         }
 
-        private static void AddVisualizer(GameObject prefab, bool movable)
+        private static void AddVisualizer(GameObject prefab)
         {
-            StationaryChoreRangeVisualizer choreRangeVisualizer = prefab.AddOrGet<StationaryChoreRangeVisualizer>();
-            choreRangeVisualizer.x = -2;
-            choreRangeVisualizer.y = 0;
-            choreRangeVisualizer.width = 5;
-            choreRangeVisualizer.height = 5;
-            choreRangeVisualizer.movable = movable;
+            RangeVisualizer rangeVisualizer = prefab.AddOrGet<RangeVisualizer>();
+            rangeVisualizer.OriginOffset = Vector2I.zero;
+            rangeVisualizer.RangeMin.x = -2;
+            rangeVisualizer.RangeMin.y = 0;
+            rangeVisualizer.RangeMax.x = 2;
+            rangeVisualizer.RangeMax.y = 5;
+            rangeVisualizer.BlockingTileVisible = true;
         }
     }
 }

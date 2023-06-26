@@ -1,5 +1,4 @@
-﻿using HarmonyLib;
-using KSerialization;
+﻿using KSerialization;
 using STRINGS;
 using System.Collections.Generic;
 
@@ -9,10 +8,10 @@ namespace Creature_Motion_Sensor
     public class LogicCreatureSensor : Switch, IIntSliderControl, ISim1000ms, ISim200ms
     {
         [Serialize]
-        public int pickupRange = 5;
+        protected int pickupRange = 5;
         private readonly List<Pickupable> creatures = new List<Pickupable>();
-        private List<int> reachableCells = new List<int>(100);
-        [MyCmpGet]
+        private readonly List<int> reachableCells = new List<int>(100);
+        [MyCmpReq]
         private KSelectable selectable;
         [MyCmpGet]
         private Rotatable rotatable;
@@ -20,34 +19,30 @@ namespace Creature_Motion_Sensor
         private HandleVector<int>.Handle pickupablesChangedEntry;
         private bool pickupablesDirty;
         private Extents pickupableExtents;
-        [MyCmpGet]
-        private readonly StationaryChoreRangeVisualizer choreRangeVisualizer;
+        [MyCmpReq]
+        private readonly RangeVisualizer rangeVisualizer;
+        [MyCmpReq]
+        private LogicPorts logicPorts;
 
+        #region ISliderControl
         public string SliderTitleKey => "STRINGS.UI.STARMAP.ROCKETSTATS.TOTAL_RANGE";
-
         public string SliderUnits => UI.UNITSUFFIXES.DISTANCE.METER;
-
         public int SliderDecimalPlaces(int index) => 0;
-
         public float GetSliderMin(int index) => 3f;
-
         public float GetSliderMax(int index) => 21f;
-
         public float GetSliderValue(int index) => pickupRange;
-
-        public void SetSliderValue(float percent, int index)
+        public void SetSliderValue(float value, int index)
         {
-            int num = (int)((percent + 1f) / 2f) * 2 - 1;
+            int num = (int)((value + 1f) / 2f) * 2 - 1;
             if (pickupRange == num)
                 return;
             pickupRange = num;
             RefreshReachableCells();
             RefreshVisualCells();
         }
-
         public string GetSliderTooltipKey(int index) => string.Format(STRINGS.UI.UISIDESCREENS.LOGICCREATURESENSORSIDESCREEN.TOOLTIP, pickupRange);
-
         public string GetSliderTooltip() => string.Format(STRINGS.UI.UISIDESCREENS.LOGICCREATURESENSORSIDESCREEN.TOOLTIP, pickupRange);
+        #endregion
 
         protected override void OnPrefabInit()
         {
@@ -76,30 +71,26 @@ namespace Creature_Motion_Sensor
         public void Sim1000ms(float dt)
         {
             RefreshReachableCells();
-            if (choreRangeVisualizer.width == pickupRange)
-                return;
-            RefreshVisualCells();
         }
 
-        public void Sim200ms(float dt) => RefreshPickupables();
+        public void Sim200ms(float dt)
+        {
+            RefreshPickupables();
+        }
 
         private void RefreshVisualCells()
         {
-            choreRangeVisualizer.x = -pickupRange / 2;
-            choreRangeVisualizer.y = 0;
-            choreRangeVisualizer.width = pickupRange;
-            choreRangeVisualizer.height = pickupRange;
-            if (selectable.IsSelected)
-                Traverse.Create(choreRangeVisualizer).Method("UpdateVisualizers"/*, new object[0]*/).GetValue();
-            Vector2I xy = Grid.CellToXY(this.NaturalBuildingCell());
-            int cell = Grid.XYToCell(xy.x, xy.y + pickupRange / 2);
-            if ((bool)rotatable)
+            rangeVisualizer.RangeMin.x = -pickupRange / 2;
+            rangeVisualizer.RangeMax.x = pickupRange / 2;
+            rangeVisualizer.RangeMax.y = pickupRange - 1;
+            int cell = this.NaturalBuildingCell();
+            CellOffset offset = new CellOffset(0, pickupRange / 2);
+            if (rotatable)
             {
-                CellOffset offset = new CellOffset(0, pickupRange / 2);
-                CellOffset rotatedCellOffset = rotatable.GetRotatedCellOffset(offset);
-                if (Grid.IsCellOffsetValid(this.NaturalBuildingCell(), rotatedCellOffset))
-                    cell = Grid.OffsetCell(this.NaturalBuildingCell(), rotatedCellOffset);
+                offset = rotatable.GetRotatedCellOffset(offset);
             }
+            if (Grid.IsCellOffsetValid(cell, offset))
+                cell = Grid.OffsetCell(cell, offset);
             pickupableExtents = new Extents(cell, pickupRange / 2);
             GameScenePartitioner.Instance.Free(ref pickupablesChangedEntry);
             pickupablesChangedEntry = GameScenePartitioner.Instance.Add("CreatureSensor.PickupablesChanged", gameObject, pickupableExtents, GameScenePartitioner.Instance.pickupablesChangedLayer, OnPickupablesChanged);
@@ -108,43 +99,43 @@ namespace Creature_Motion_Sensor
 
         private void RefreshReachableCells()
         {
-            ListPool<int, LogicCreatureSensor>.PooledList pooledList = ListPool<int, LogicCreatureSensor>.Allocate(reachableCells);
             reachableCells.Clear();
             int x, y;
             Grid.CellToXY(this.NaturalBuildingCell(), out x, out y);
             int num = x - pickupRange / 2;
-            for (int index1 = y; index1 < y + pickupRange + 1; ++index1)
+            for (int indexY = y; indexY < y + pickupRange; ++indexY)
             {
-                for (int index2 = num; index2 < num + pickupRange + 1; ++index2)
+                for (int indexX = num; indexX < num + pickupRange; ++indexX)
                 {
-                    int cell1 = Grid.XYToCell(index2, index1);
-                    if ((bool)rotatable)
+                    int cell = Grid.InvalidCell;
+                    Vector2I xy = Vector2I.zero;
+                    if (rotatable)
                     {
-                        CellOffset offset = new CellOffset(index2 - x, index1 - y);
+                        CellOffset offset = new CellOffset(indexX - x, indexY - y);
                         offset = rotatable.GetRotatedCellOffset(offset);
                         if (Grid.IsCellOffsetValid(this.NaturalBuildingCell(), offset))
                         {
-                            int cell2 = Grid.OffsetCell(this.NaturalBuildingCell(), offset);
-                            Vector2I xy = Grid.CellToXY(cell2);
-                            if (Grid.IsValidCell(cell2) && Grid.IsPhysicallyAccessible(x, y, xy.x, xy.y, true))
-                                reachableCells.Add(cell2);
+                            cell = Grid.OffsetCell(this.NaturalBuildingCell(), offset);
+                            xy = Grid.CellToXY(cell);
                         }
                     }
-                    else if (Grid.IsValidCell(cell1) && Grid.IsPhysicallyAccessible(x, y, index2, index1, true))
-                        reachableCells.Add(cell1);
+                    else
+                    {
+                        cell = Grid.XYToCell(indexX, indexY);
+                        xy = new Vector2I(indexX, indexY);
+                    }
+                    if (Grid.IsValidCell(cell) && Grid.IsPhysicallyAccessible(x, y, xy.x, xy.y, true))
+                        reachableCells.Add(cell);
                 }
             }
-            pooledList.Recycle();
         }
-
-        public bool IsCellReachable(int cell) => reachableCells.Contains(cell);
 
         private void RefreshPickupables()
         {
             if (!pickupablesDirty) return;
             creatures.Clear();
             ListPool<ScenePartitionerEntry, LogicCreatureSensor>.PooledList pooledList = ListPool<ScenePartitionerEntry, LogicCreatureSensor>.Allocate();
-            GameScenePartitioner.Instance.GatherEntries(pickupableExtents.x, pickupableExtents.y, pickupableExtents.width, pickupableExtents.height, GameScenePartitioner.Instance.pickupablesLayer, pooledList);
+            GameScenePartitioner.Instance.GatherEntries(pickupableExtents, GameScenePartitioner.Instance.pickupablesLayer, pooledList);
             int cell = Grid.PosToCell(this);
             for (int index = 0; index < pooledList.Count; ++index)
             {
@@ -154,6 +145,7 @@ namespace Creature_Motion_Sensor
                 if (IsPickupableRelevantToMyInterestsAndReachable(pickupable) && cellRange <= pickupRange)
                     creatures.Add(pickupable);
             }
+            pooledList.Recycle();
             SetState(creatures.Count > 0);
             pickupablesDirty = false;
         }
@@ -165,6 +157,8 @@ namespace Creature_Motion_Sensor
                 return;
             pickupablesDirty = true;
         }
+
+        public bool IsCellReachable(int cell) => reachableCells.Contains(cell);
 
         private static bool IsPickupableRelevantToMyInterests(Pickupable pickupable) => pickupable.KPrefabID.HasTag(GameTags.CreatureBrain);
 
@@ -178,7 +172,7 @@ namespace Creature_Motion_Sensor
             UpdateVisualState();
         }
 
-        private void UpdateLogicCircuit() => GetComponent<LogicPorts>().SendSignal(LogicSwitch.PORT_ID, switchedOn ? 1 : 0);
+        private void UpdateLogicCircuit() => logicPorts.SendSignal(LogicSwitch.PORT_ID, switchedOn ? 1 : 0);
 
         private void UpdateVisualState(bool force = false)
         {
