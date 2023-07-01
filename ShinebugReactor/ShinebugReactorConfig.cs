@@ -33,7 +33,6 @@ namespace ShinebugReactor
             {
                 new BuildIngredient(MATERIALS.GLASS, tier: 5),
                 //new BuildIngredient(MATERIALS.REFINED_METAL, tier: 3),
-                //new BuildIngredient(MATERIALS.BUILDABLERAW, tier: 3),
                 new BuildIngredient(MATERIALS.BUILDABLERAW, tier: 4),
             },
             Placement = BuildLocationRule.Anywhere,
@@ -54,28 +53,6 @@ namespace ShinebugReactor
 
         public override BuildingDef CreateBuildingDef()
         {
-            /*BuildingDef buildingDef = BuildingTemplates.CreateBuildingDef(ID, width, 5,
-                "shinebug_reactor_kanim", 1000, BUILDINGS.CONSTRUCTION_TIME_SECONDS.TIER4, new float[2]
-                {
-                    BUILDINGS.CONSTRUCTION_MASS_KG.TIER5[0],
-                    BUILDINGS.CONSTRUCTION_MASS_KG.TIER4[0],
-                }, new string[2]
-                {
-                    MATERIALS.GLASS,
-                    MATERIALS.REFINED_METAL,
-                }, BUILDINGS.MELTING_POINT_KELVIN.TIER1,
-                BuildLocationRule.Anywhere,
-                TUNING.BUILDINGS.DECOR.NONE,
-                TUNING.NOISE_POLLUTION.NOISY.TIER0);
-            buildingDef.name = STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.NAME;
-            buildingDef.AudioCategory = "Metal";
-            buildingDef.PowerOutputOffset = CellOffset.none;
-            buildingDef.ViewMode = OverlayModes.Power.ID;
-            buildingDef.GeneratorWattageRating = WattageRating;
-            buildingDef.GeneratorBaseCapacity = buildingDef.GeneratorWattageRating;
-            buildingDef.UtilityInputOffset = new CellOffset(-4, 1);
-            buildingDef.InputConduitType = ConduitType.Solid;
-            return buildingDef;*/
             BuildingDef buildingDef = PBuilding.CreateDef();
             buildingDef.RequiresPowerOutput = true;
             buildingDef.PowerOutputOffset = CellOffset.none;
@@ -106,10 +83,10 @@ namespace ShinebugReactor
             buildingDef.InputConduitType = ConduitType.Solid;
             return buildingDef;
         }
-        public void ConfigureDescriptors(BuildingDef buildingDef)
+        private static void ConfigureDescriptors(BuildingDef buildingDef)
         {
             List<Descriptor> descriptors = buildingDef.EffectDescription
-                ?? (buildingDef.EffectDescription = new List<Descriptor>());
+                ?? (buildingDef.EffectDescription = new List<Descriptor>(2));
 
             string formattedWattage = GameUtil.GetFormattedWattage(WattageRequired);
             descriptors.Add(new Descriptor(
@@ -126,12 +103,14 @@ namespace ShinebugReactor
                 string.Format(STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.SHINEBUGREACTORHEATGENERATED, formattedHeatEnergy)));
         }
 
-        public override void ConfigureBuildingTemplate(GameObject go, Tag prefab_tag) => PBuilding.ConfigureBuildingTemplate(go);
+        public override void ConfigureBuildingTemplate(GameObject go, Tag prefab_tag)
+        {
+            PBuilding.ConfigureBuildingTemplate(go);
+        }
 
         public override void DoPostConfigureComplete(GameObject go)
         {
             PBuilding.DoPostConfigureComplete(go);
-            go.AddOrGet<LoopingSounds>();
             go.AddOrGet<Automatable>();
             Storage storage = go.AddOrGet<Storage>();
             storage.capacityKg = 400f;
@@ -146,7 +125,7 @@ namespace ShinebugReactor
             //tree.AcceptedTags.AddRange(eggTags);
             storage.storageFilters = eggTags;//new List<Tag>() { GameTags.Egg };
             go.AddOrGet<ItemsRemovable>();
-            SolidConduitConsumer conduitConsumer = go.AddOrGet<SolidConduitConsumer>();
+            SolidConduitFilteredConsumer conduitConsumer = go.AddOrGet<SolidConduitFilteredConsumer>();
             conduitConsumer.alwaysConsume = true;
             MakeBaseSolid.Def solidBase = go.AddOrGetDef<MakeBaseSolid.Def>();
             solidBase.occupyFoundationLayer = false;
@@ -159,12 +138,12 @@ namespace ShinebugReactor
                 go.AddOrGet<HighEnergyParticleStorage>().capacity = HighEnergyParticleSpawnerConfig.MAX_SLIDER + 1f;
                 ConfigureRadiation(go);
             }
-            go.AddOrGet<ShinebugReactor>();
             ConfigureLight(go);
+            go.AddOrGet<ShinebugReactor>();
             ConfigureVisualSize(go);
         }
 
-        public RadiationEmitter ConfigureRadiation(GameObject go)
+        private static RadiationEmitter ConfigureRadiation(GameObject go)
         {
             RadiationEmitter emitter = go.AddOrGet<RadiationEmitter>();
             emitter.emitType = RadiationEmitter.RadiationEmitterType.Constant;
@@ -175,7 +154,7 @@ namespace ShinebugReactor
             emitter.emitRate = 0.1f;
             return emitter;
         }
-        public Light2D ConfigureLight(GameObject go)
+        private static Light2D ConfigureLight(GameObject go)
         {
             Light2D light = go.AddOrGet<Light2D>();
             light.drawOverlay = true;
@@ -203,7 +182,7 @@ namespace ShinebugReactor
             }*/
         }
 
-        public void ConfigureVisualSize(GameObject go)
+        private static void ConfigureVisualSize(GameObject go)
         {
             var animController = go.GetComponent<KBatchedAnimController>();
             animController.animWidth = 0.9f;

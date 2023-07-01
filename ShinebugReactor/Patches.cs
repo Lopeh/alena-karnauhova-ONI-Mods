@@ -8,36 +8,12 @@ using System.Reflection;
 using Database;
 using Utils;
 using PeterHan.PLib.UI;
+using MonoMod.Utils;
 
 namespace ShinebugReactor
 {
     public class Patches : KMod.UserMod2
     {
-        /*[HarmonyPatch(typeof(BuildingStatusItems), "CreateStatusItems")]
-        internal static class Tooltips
-        {
-            public static void Postfix(BuildingStatusItems __instance)
-            {
-                ShinebugReactor.CreatureCountStatus = Traverse.Create(__instance).Method("CreateStatusItem", new Type[]
-                {
-                    typeof(string), typeof(string), typeof(string), typeof(StatusItem.IconType), typeof(NotificationType), typeof(bool), typeof(HashedString), typeof(bool), typeof(int)
-                }).GetValue<StatusItem>(new object[]
-                {
-                    "ShinebugReactorWattage", "BUILDING",
-                    string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
-                    false, OverlayModes.Power.ID//, true, 129022
-                });
-                ShinebugReactor.CreatureCountStatus.resolveStringCallback = ((str, data) =>
-                {
-                    ShinebugReactor shinebugReactor = (ShinebugReactor)data;
-                    str = str.Replace("{Wattage}", GameUtil.GetFormattedWattage(shinebugReactor.CurrentWattage))
-                    .Replace("{Rads}", GameUtil.GetFormattedRads(shinebugReactor.CurrentHEP))
-                    .Replace("{creatures}", shinebugReactor.Creatures.Count.ToString());
-                    return str;
-                });
-            }
-        }*/
-
         [HarmonyPatch(typeof(IncubationMonitor.Instance), "UpdateIncubationState")]
         private static class IncubationMonitor_UpdateIncubationState_Patch
         {
@@ -68,13 +44,15 @@ namespace ShinebugReactor
         [HarmonyPatch(typeof(IncubationMonitor), "SpawnBaby")]
         private static class IncubationMonitor_SpawnBaby_Patch
         {
+            private static readonly Func<IncubationMonitor.Instance, GameObject> spawnShell
+                = AccessTools.Method(typeof(IncubationMonitor), "SpawnShell")
+                .CreateDelegate<Func<IncubationMonitor.Instance, GameObject>>();
             private static bool Prefix(IncubationMonitor.Instance smi)
             {
                 ShinebugReactor reactor = smi.GetStorage()?.GetComponent<ShinebugReactor>();
                 if (reactor)
                 {
-                    Traverse.Create(typeof(IncubationMonitor)).Method("SpawnShell", new Type[] { smi.GetType() })
-                        .GetValue(new object[] { smi });
+                    spawnShell(smi);
                     reactor.EggHatched(smi.gameObject);
                     //smi.GetStorage().Drop(smi.gameObject);
                     //smi.gameObject.AddTag(GameTags.StoredPrivate);
@@ -137,6 +115,43 @@ namespace ShinebugReactor
             private static void Postfix(GameObject go)
             {
                 FixStoragePriority(go.GetComponent<Storage>());
+            }
+        }
+
+        [HarmonyPatch(typeof(BuildingStatusItems), "CreateStatusItems")]
+        private static class Tooltips
+        {
+            private static void Postfix(BuildingStatusItems __instance)
+            {
+                ShinebugReactor.AddStatusItemsToDatabase(__instance);
+                /*ShinebugReactor.CreatureCountStatus = Traverse.Create(__instance).Method("CreateStatusItem", new Type[]
+                {
+                    typeof(string), typeof(string), typeof(string), typeof(StatusItem.IconType), typeof(NotificationType), typeof(bool), typeof(HashedString), typeof(bool), typeof(int)
+                }).GetValue<StatusItem>(new object[]
+                {
+                    "ShinebugReactorWattage", "BUILDING",
+                    string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
+                    false, OverlayModes.Power.ID//, true, 129022
+                });
+                ShinebugReactor.CreatureCountStatus.resolveStringCallback = ((str, data) =>
+                {
+                    ShinebugReactor shinebugReactor = (ShinebugReactor)data;
+                    str = str.Replace("{Wattage}", GameUtil.GetFormattedWattage(shinebugReactor.CurrentWattage))
+                    .Replace("{Rads}", GameUtil.GetFormattedRads(shinebugReactor.CurrentHEP))
+                    .Replace("{creatures}", shinebugReactor.Creatures.Count.ToString());
+                    return str;
+                });*/
+            }
+        }
+
+        [HarmonyPatch(typeof(StructureTemperatureComponents), "InitializeStatusItem")]
+        private static class StructureTemperatures_Patch
+        {
+            private static void Postfix(StructureTemperatureComponents __instance)
+            {
+                ShinebugReactor.OperatingEnergyStatusItem =
+                    Traverse.Create(__instance).Field("operatingEnergyStatusItem")
+                    .GetValue<StatusItem>();
             }
         }
 

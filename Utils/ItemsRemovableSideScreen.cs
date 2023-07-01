@@ -2,8 +2,8 @@
 using UnityEngine;
 using PeterHan.PLib.UI;
 
-//namespace Utils
-//{
+namespace Utils
+{
     public class ItemsRemovableSideScreen : SideScreenContent
     {
         protected MultiToggle allowRemoveItemsToggle;
@@ -76,4 +76,4 @@ using PeterHan.PLib.UI;
             base.ClearTarget();
         }
     }
-//}
+}

@@ -4,11 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using PeterHan.PLib.Options;
 using static STRINGS.UI;
 using GameStrings = STRINGS;
 using HarmonyLib;
 using System.Reflection;
+using Database;
+using MonoMod.Utils;
 
 namespace ShinebugReactor
 {
@@ -18,6 +19,7 @@ namespace ShinebugReactor
     {
         public const string EGG_POSTFIX = "Egg";
         public const string BABY_POSTFIX = "Baby";
+        public const float RADIUS_FACTOR = 26.5f;
 
         #region Components
         [MyCmpReq]
@@ -43,6 +45,7 @@ namespace ShinebugReactor
         protected EightDirectionController directionController;
 
         //protected Guid[] statusHandles = new Guid[3];
+        protected Traverse<FetchList2> fetchListEggs;
         protected FilteredStorage filteredStorageEggs;//, filteredStorageCreatures;
         //protected Action<object> fsOnStorageChanged;
         [Serialize]
@@ -61,7 +64,7 @@ namespace ShinebugReactor
             resolve_string_callback: ((str, data) =>
             {
                 int value = ((ShinebugReactor)data).Creatures.Count;
-                str = string.Format(str, value);
+                str = string.Format(str, value.ToString());
                 return str;
             }));
         public static readonly StatusItem EggCountStatus
@@ -71,7 +74,7 @@ namespace ShinebugReactor
             resolve_string_callback: ((str, data) =>
             {
                 int value = Mathf.RoundToInt(((ShinebugReactor)data).storage.UnitsStored());
-                str = string.Format(str, value);
+                str = string.Format(str, value.ToString());
                 return str;
             }));
         public static readonly StatusItem WattageStatus
@@ -165,7 +168,7 @@ namespace ShinebugReactor
         #region ISliderControl
         public string SliderTitleKey => "STRINGS.UI.UISIDESCREENS.RADBOLTTHRESHOLDSIDESCREEN.TITLE";
         public string SliderUnits => (string)UNITSUFFIXES.HIGHENERGYPARTICLES.PARTRICLES;
-        public int SliderDecimalPlaces(int index) => 0;
+        public int SliderDecimalPlaces(int index) => 1;
         public float GetSliderMin(int index) => HighEnergyParticleSpawnerConfig.MIN_SLIDER;
         public float GetSliderMax(int index) => HighEnergyParticleSpawnerConfig.MAX_SLIDER;
         public float GetSliderValue(int index) => ParticleThreshold;
@@ -173,6 +176,16 @@ namespace ShinebugReactor
         public string GetSliderTooltipKey(int index) => "STRINGS.UI.UISIDESCREENS.RADBOLTTHRESHOLDSIDESCREEN.TOOLTIP";
         public string GetSliderTooltip() => string.Format(Strings.Get("STRINGS.UI.UISIDESCREENS.RADBOLTTHRESHOLDSIDESCREEN.TOOLTIP"), ParticleThreshold);
         #endregion
+        public static void AddStatusItemsToDatabase(BuildingStatusItems statusItemsList)
+        {
+            statusItemsList.Add(CreatureCountStatus);
+            statusItemsList.Add(EggCountStatus);
+            statusItemsList.Add(WattageStatus);
+            statusItemsList.Add(HEPStatus);
+            statusItemsList.Add(HEPStorageStatus);
+            statusItemsList.Add(NoHEPProductionWarningStatus);
+            statusItemsList.Add(HEPProductionDisabledStatus);
+        }
         protected override void OnPrefabInit()
         {
             base.OnPrefabInit();
@@ -181,24 +194,14 @@ namespace ShinebugReactor
             //filteredStorageEggs = new FilteredStorage(this, requiredTagsEggs, null, this, false, Db.Get().ChoreTypes.PowerFetch);
             filteredStorageEggs = new FilteredStorage(this, null, this, false, Db.Get().ChoreTypes.PowerFetch);
             //filteredStorageCreatures = new FilteredStorage(this, /*null*/requiredTagsCreatures, null, /*null*/this, false, Db.Get().ChoreTypes.PowerFetch);
-            MethodInfo method = typeof(FilteredStorage).GetMethod("OnStorageChanged",
-                BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo method = AccessTools.Method(typeof(FilteredStorage), "OnStorageChanged");
             Action<object> fsEggsOnStorageChanged, fsCreaturesOnStorageChanged;
-            fsEggsOnStorageChanged = (Action<object>)method.CreateDelegate(typeof(Action<object>), filteredStorageEggs);
-            //fsCreaturesOnStorageChanged = (Action<object>)method.CreateDelegate(typeof(Action<object>), filteredStorageCreatures);
+            fsEggsOnStorageChanged = method.CreateDelegate<Action<object>>(filteredStorageEggs);
+            //fsCreaturesOnStorageChanged = method.CreateDelegate<Action<object>>(filteredStorageCreatures);
             Unsubscribe((int)GameHashes.OnStorageChange, fsEggsOnStorageChanged);
             //Unsubscribe((int)GameHashes.OnStorageChange, fsCreaturesOnStorageChanged);
             //fsOnStorageChanged = fsEggsOnStorageChanged + fsCreaturesOnStorageChanged;
-
-            OperatingEnergyStatusItem = Traverse.Create(GameComps.StructureTemperatures).Field("operatingEnergyStatusItem")
-                .GetValue<StatusItem>();
-            Db.Get().BuildingStatusItems.Add(CreatureCountStatus);
-            Db.Get().BuildingStatusItems.Add(EggCountStatus);
-            Db.Get().BuildingStatusItems.Add(WattageStatus);
-            Db.Get().BuildingStatusItems.Add(HEPStatus);
-            Db.Get().BuildingStatusItems.Add(HEPStorageStatus);
-            Db.Get().BuildingStatusItems.Add(NoHEPProductionWarningStatus);
-            Db.Get().BuildingStatusItems.Add(HEPProductionDisabledStatus);
+            fetchListEggs = Traverse.Create(filteredStorageEggs).Field<FetchList2>("fetchList");
         }
         protected override void OnSpawn()
         {
@@ -262,8 +265,7 @@ namespace ShinebugReactor
             {
                 UpdateLogic();
 
-                FetchList2 fetchList1 = Traverse.Create(filteredStorageEggs)
-                    .Field("fetchList").GetValue<FetchList2>();
+                FetchList2 fetchList1 = fetchListEggs.Value;
                 //FetchList2 fetchList2 = Traverse.Create(filteredStorageCreatures)
                     //.Field("fetchList").GetValue<FetchList2>();
                 if (fetchList1 == null || !fetchList1.InProgress)
@@ -272,7 +274,7 @@ namespace ShinebugReactor
                 }
                 //if (fetchList2 == null || !fetchList2.InProgress)
                 //{
-                    //filteredStorageCreatures.FilterChanged();
+                //filteredStorageCreatures.FilterChanged();
                 //}
                 //fsOnStorageChanged(null);
             }
@@ -347,7 +349,7 @@ namespace ShinebugReactor
             {
                 for (int i = Creatures.Count - 1; i >= 0; --i)
                 {
-                    if (!(tags.Contains(Creatures[i].Name + EGG_POSTFIX) || tags.Contains(Creatures[i].Name)))
+                    if (!(tags.Contains(Creatures[i].Name) || tags.Contains(Creatures[i].Name + EGG_POSTFIX)))
                     {
                         SpawnCreature(Creatures[i]);
                         Creatures.RemoveAt(i);
@@ -361,7 +363,7 @@ namespace ShinebugReactor
             if (go == null) return;
             bool dropped = !storage.items.Contains(go);
             if (!dropped && (Mathf.RoundToInt(AmountStored) > UserCapacity
-                || !go.HasAnyTags(treeFilterable.GetTags().ToArray())))
+                || !treeFilterable.ContainsTag(go.PrefabID())))
             {
                 Unsubscribe((int)GameHashes.OnStorageChange, OnStorageChanged);
                 storage.Drop(go);
@@ -371,9 +373,6 @@ namespace ShinebugReactor
             //filterable.UpdateFilters(new List<Tag>(filterable.AcceptedTags));
             if (dropped)
             {
-                /*go.transform.SetPosition(go.HasTag(GameTags.Creature) ?
-                    Grid.CellToPosCBC(Grid.PosToCell(storageDropPosition), Grid.SceneLayer.Creatures)
-                    : storageDropPosition);*/
                 go.transform.SetPosition(Grid.CellToPosCBC(storageDropCell,
                     go.HasTag(GameTags.Creature) ? Grid.SceneLayer.Creatures : Grid.SceneLayer.Ore));
             }
@@ -405,7 +404,6 @@ namespace ShinebugReactor
             {
                 CurrentHEP = -particleStorage.ConsumeAndGet(dt * HighEnergyParticleSpawnerConfig.DISABLED_CONSUMPTION_RATE);
             }
-            //this.progressMeterController.SetPositionPercent(this.GetProgressBarFillPercentage());
         }
 
         public override void EnergySim200ms(float dt)
@@ -437,7 +435,7 @@ namespace ShinebugReactor
                 switch (Options.Instance.PowerGenerationMode)
                 {
                     case Options.PowerGenerationModeType.SolarPanel:
-                        CurrentWattage *= 26.5f * SolarPanelConfig.WATTS_PER_LUX;
+                        CurrentWattage *= RADIUS_FACTOR * SolarPanelConfig.WATTS_PER_LUX;
                         break;
                     case Options.PowerGenerationModeType.Ratio:
                         CurrentWattage *= Options.Instance.MaxPowerOutput / MaxCapacity;
