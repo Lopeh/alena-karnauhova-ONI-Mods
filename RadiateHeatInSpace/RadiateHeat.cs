@@ -1,57 +1,78 @@
-﻿using Klei.AI;
-using KSerialization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using PeterHan.PLib.Options;
-using static STRINGS.UI;
+﻿using System;
+using static GameComps;
 
 namespace RadiateHeatInSpace
 {
+    using static STRINGS.BUILDING.STATUSITEMS;
+
     //[SerializationConfig(MemberSerialization.OptIn)]
     [SkipSaveFileSerialization]
     public class RadiateHeat : KMonoBehaviour
     {
         public const float StefanBoltzmannConstant = 5.67e-8f;
         public const float MinimumTemperature = 3f;
-        public static StatusItem NotInSpaceStatus = new StatusItem("RADIATEHEAT_NOTINSPACE", "BUILDING",
-            string.Empty, StatusItem.IconType.Info, NotificationType.Neutral, false, OverlayModes.HeatFlow.ID);
-        public static StatusItem TooColdStatus = new StatusItem("RADIATEHEAT_TOOCOLD", "BUILDING",
-            string.Empty, StatusItem.IconType.Info, NotificationType.Neutral, false, OverlayModes.HeatFlow.ID);
-        public static StatusItem RadiatingStatus = new StatusItem("RADIATEHEAT_RADIATING", "BUILDING",
-            string.Empty, StatusItem.IconType.Info, NotificationType.Neutral, false, OverlayModes.HeatFlow.ID,
+        #region StatusItems
+        public const string StatusItemPrefix = "BUILDING";
+        public static readonly StatusItem NotInSpaceStatus
+            = new StatusItem(nameof(RADIATEHEAT_NOTINSPACE), StatusItemPrefix,
+            string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
+            false, OverlayModes.HeatFlow.ID);
+        public static readonly StatusItem TooColdStatus
+            = new StatusItem(nameof(RADIATEHEAT_TOOCOLD), StatusItemPrefix,
+            string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
+            false, OverlayModes.HeatFlow.ID);
+        public static readonly StatusItem RadiatingStatus
+            = new StatusItem(nameof(RADIATEHEAT_RADIATING), StatusItemPrefix,
+            string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
+            false, OverlayModes.HeatFlow.ID,
             resolve_string_callback: ((str, data) =>
             {
                 float value = ((RadiateHeat)data).CurrentCooling;
                 str = string.Format(str, GameUtil.GetFormattedHeatEnergyRate(value));
                 return str;
             }));
-        public static StatusItem NotInSunlightStatus = new StatusItem("RADIATEHEAT_NOTINSUNLIGHT", "BUILDING",
-            string.Empty, StatusItem.IconType.Info, NotificationType.Neutral, false, OverlayModes.HeatFlow.ID);
-        public static StatusItem TooHotStatus = new StatusItem("RADIATEHEAT_TOOHOT", "BUILDING",
-            string.Empty, StatusItem.IconType.Info, NotificationType.Neutral, false, OverlayModes.HeatFlow.ID);
-        public static StatusItem AbsorbingStatus = new StatusItem("RADIATEHEAT_ABSORBING", "BUILDING",
-            string.Empty, StatusItem.IconType.Info, NotificationType.Neutral, false, OverlayModes.HeatFlow.ID,
+        public static readonly StatusItem NotInSunlightStatus
+            = new StatusItem(nameof(RADIATEHEAT_NOTINSUNLIGHT), StatusItemPrefix,
+            string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
+            false, OverlayModes.HeatFlow.ID);
+        public static readonly StatusItem TooHotStatus
+            = new StatusItem(nameof(RADIATEHEAT_TOOHOT), StatusItemPrefix,
+            string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
+            false, OverlayModes.HeatFlow.ID);
+        public static readonly StatusItem AbsorbingStatus
+            = new StatusItem(nameof(RADIATEHEAT_ABSORBING), StatusItemPrefix,
+            string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
+            false, OverlayModes.HeatFlow.ID,
             resolve_string_callback: ((str, data) =>
             {
                 float value = ((RadiateHeat)data).CurrentHeating;
                 str = string.Format(str, GameUtil.GetFormattedHeatEnergyRate(value));
                 return str;
             }));
+        #endregion
         public float Emissivity = 0.9f;
         public float SurfaceArea = 1f;
-        [MyCmpReq]
-        protected BuildingComplete building;
-        [MyCmpReq]
-        protected KSelectable selectable; // does tooltip-related stuff
-        [MyCmpReq]
-        protected PrimaryElement element;
+        #region Components
+        [MyCmpGet]
+        protected readonly BuildingComplete building;
+        [MyCmpGet]
+        protected readonly PrimaryElement element;
+        #endregion
         protected HandleVector<int>.Handle structureTemperature;
         protected Radiate.Instance RadiateSMI;
         protected Absorb.Instance AbsorbSMI;
 
         public float CurrentCooling, CurrentHeating;
+        
+        public static void AddStatusItemsToDatabase(Database.BuildingStatusItems statusItemsList)
+        {
+            statusItemsList.Add(NotInSpaceStatus);
+            statusItemsList.Add(TooColdStatus);
+            statusItemsList.Add(RadiatingStatus);
+            statusItemsList.Add(NotInSunlightStatus);
+            statusItemsList.Add(TooHotStatus);
+            statusItemsList.Add(AbsorbingStatus);
+        }
 
         public bool CheckInSpace()
         {
@@ -67,12 +88,6 @@ namespace RadiateHeatInSpace
         protected override void OnPrefabInit()
         {
             base.OnPrefabInit();
-            Db.Get().BuildingStatusItems.Add(NotInSpaceStatus);
-            Db.Get().BuildingStatusItems.Add(TooColdStatus);
-            Db.Get().BuildingStatusItems.Add(RadiatingStatus);
-            Db.Get().BuildingStatusItems.Add(NotInSunlightStatus);
-            Db.Get().BuildingStatusItems.Add(TooHotStatus);
-            Db.Get().BuildingStatusItems.Add(AbsorbingStatus);
             BuildingDef def = building.Def;
             //if (!def) return;
             SurfaceArea = def.HeightInCells * def.WidthInCells;
@@ -82,7 +97,7 @@ namespace RadiateHeatInSpace
         {
             base.OnSpawn();
 
-            structureTemperature = GameComps.StructureTemperatures.GetHandle(gameObject);
+            structureTemperature = StructureTemperatures.GetHandle(gameObject);
             if (!structureTemperature.IsValid()) return;
             if (CheckInSpace())
             {
@@ -120,20 +135,21 @@ namespace RadiateHeatInSpace
                     notInSpace.Transition(operational, smi =>
                         smi.CanRadiate(),
                         UpdateRate.SIM_4000ms)
-                        .ToggleStatusItem(NotInSpaceStatus, smi => smi.master);
+                        .ToggleStatusItem(NotInSpaceStatus, GetMaster);
                     operational.DefaultState(operational.radiating).Transition(notInSpace, smi =>
                         !smi.CanRadiate(),
                         UpdateRate.SIM_4000ms);
                     operational.radiating.Transition(operational.tooCold, smi =>
                         smi.master.element.Temperature <= MinimumTemperature,
                         UpdateRate.SIM_200ms)
-                        .ToggleStatusItem(RadiatingStatus, smi => smi.master)
+                        .ToggleStatusItem(RadiatingStatus, GetMaster)
                         .Update((smi, dt) => smi.UpdateTemperature(dt), UpdateRate.SIM_200ms);
                     operational.tooCold.Transition(operational.radiating, smi =>
                         smi.master.element.Temperature > MinimumTemperature,
                         UpdateRate.SIM_200ms)
-                        .ToggleStatusItem(TooColdStatus, smi => smi.master);
+                        .ToggleStatusItem(TooColdStatus, GetMaster);
                 }
+                protected static readonly Func<Radiate.Instance, object> GetMaster = (smi) => smi.master;
             }
             public class Instance : GameStateMachine<States, Instance, RadiateHeat, object>.GameInstance
             {
@@ -145,21 +161,15 @@ namespace RadiateHeatInSpace
                     master.CurrentCooling = RadiativeHeat(temp);
                     if (master.CurrentCooling > 0f)
                     {
-                        GameComps.StructureTemperatures.ProduceEnergy(master.structureTemperature,
-                            -master.CurrentCooling * dt / 1000f, "Radiated", dt);
+                        StructureTemperatures.ProduceEnergy(master.structureTemperature,
+                            -master.CurrentCooling * dt / 1000f, OPERATINGENERGY.RADIATED, dt);
                     }
-                    UpdateStatusItem();
                 }
 
                 public float RadiativeHeat(float temp)
                 {
-                    return StefanBoltzmannConstant
-                        * (Mathf.Pow(temp, 4f) * master.Emissivity * master.SurfaceArea);
-                }
-
-                protected void UpdateStatusItem()
-                {
-                    master.selectable.ToggleStatusItem(RadiatingStatus, true, master);
+                    return StefanBoltzmannConstant * ((temp * temp * temp * temp)
+                        * master.Emissivity * master.SurfaceArea);
                 }
 
                 public bool CanRadiate()
@@ -195,20 +205,21 @@ namespace RadiateHeatInSpace
                     notInSunlight.Transition(operational, smi =>
                         smi.CheckInSunlight(),
                         UpdateRate.SIM_1000ms)
-                        .ToggleStatusItem(NotInSunlightStatus, smi => smi.master);
+                        .ToggleStatusItem(NotInSunlightStatus, GetMaster);
                     operational.DefaultState(operational.absorbing).Transition(notInSunlight, smi =>
                         !smi.CheckInSunlight(),
                         UpdateRate.SIM_1000ms);
                     operational.absorbing.Transition(operational.tooHot, smi =>
                         smi.master.element.Temperature >= Options.Instance.MaximumTemperature,
                         UpdateRate.SIM_200ms)
-                        .ToggleStatusItem(AbsorbingStatus, smi => smi.master)
+                        .ToggleStatusItem(AbsorbingStatus, GetMaster)
                         .Update((smi, dt) => smi.UpdateTemperature(dt), UpdateRate.SIM_200ms);
                     operational.tooHot.Transition(operational.absorbing, smi =>
                         smi.master.element.Temperature < Options.Instance.MaximumTemperature,
                         UpdateRate.SIM_200ms)
-                        .ToggleStatusItem(TooHotStatus, smi => smi.master);
+                        .ToggleStatusItem(TooHotStatus, GetMaster);
                 }
+                protected static readonly Func<Absorb.Instance, object> GetMaster = (smi) => smi.master;
             }
             public class Instance : GameStateMachine<States, Instance, RadiateHeat, object>.GameInstance
             {
@@ -225,10 +236,9 @@ namespace RadiateHeatInSpace
                     master.CurrentHeating = SunlightHeat();
                     if (master.CurrentHeating > 0f)
                     {
-                        GameComps.StructureTemperatures.ProduceEnergy(master.structureTemperature,
-                            master.CurrentHeating * dt / 1000f, "Absorbed", dt);
+                        StructureTemperatures.ProduceEnergy(master.structureTemperature,
+                            master.CurrentHeating * dt / 1000f, OPERATINGENERGY.ABSORBED, dt);
                     }
-                    UpdateStatusItem();
                 }
 
                 public float SunlightHeat()
@@ -238,11 +248,6 @@ namespace RadiateHeatInSpace
                     float heat = (float)exposedToSunlight / (float)byte.MaxValue
                         * sunlightIntensity / Options.Instance.SunLightEfficiency;
                     return heat * master.Emissivity;
-                }
-
-                protected void UpdateStatusItem()
-                {
-                    master.selectable.ToggleStatusItem(AbsorbingStatus, true, master);
                 }
 
                 public bool CheckInSunlight()

@@ -5,6 +5,7 @@ using PeterHan.PLib.Buildings;
 using System.Collections.Generic;
 using UnityEngine;
 using Utils;
+using Database;
 
 namespace RadiateHeatInSpace
 {
@@ -22,17 +23,22 @@ namespace RadiateHeatInSpace
             private static void Prefix(BuildingDef def)
             {
                 GameObject go = def.BuildingComplete;
-                if (go != null)
+                if (go != null && Options.Instance.RadiativeBuildings
+                        .TryGetValue(go.PrefabID().Name, out float emissivity))
                 {
-                    float emissivity;
-                    if (Options.Instance.RadiativeBuildings.TryGetValue(go.PrefabID().Name, out emissivity))
-                    {
-                        AttachHeatComponent(go, emissivity);
-                    }
+                    AttachHeatComponent(go, emissivity);
                 }
             }
         }
 
+        [HarmonyPatch(typeof(BuildingStatusItems), "CreateStatusItems")]
+        private static class Tooltips
+        {
+            private static void Postfix(BuildingStatusItems __instance)
+            {
+                RadiateHeat.AddStatusItemsToDatabase(__instance);
+            }
+        }
         [HarmonyPatch(typeof(Localization), nameof(Localization.Initialize))]
         private static class Localization_Initialize_Patch
         {

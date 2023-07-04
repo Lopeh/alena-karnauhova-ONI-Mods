@@ -42,6 +42,10 @@ namespace RadiateHeatInSpace
             //{ SolarPanelConfig.ID, 0.1f },
             { CeilingLightConfig.ID, 0.5f },
             { FloorLampConfig.ID, 0.3f },
+            // New stuff
+            { MissionControlConfig.ID, 0.2f },
+            { MissileLauncherConfig.ID, 0.2f },
+            { ContactConductivePipeBridgeConfig.ID, 0.5f },
             // Spaced Out!
             //{ BaseModularLaunchpadPortConfig.LinkTag.Name, 0.3f },
             { ModularLaunchpadPortGasConfig.ID, 0.3f },

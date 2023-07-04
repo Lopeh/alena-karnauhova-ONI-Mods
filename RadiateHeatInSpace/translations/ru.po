@@ -73,6 +73,14 @@ msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.RADIATEHEAT_ABSORBING.T
 msgid "This building is currently absorbing heat from sun at {0}."
 msgstr "Это строение сейчас поглощает {0} тепла от солнца."
 
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.OPERATINGENERGY.RADIATED"
+msgid "Radiated"
+msgstr "Излучено"
+
+msgctxt "RadiateHeatInSpace.STRINGS.BUILDING.STATUSITEMS.OPERATINGENERGY.ABSORBED"
+msgid "Absorbed"
+msgstr "Поглощено"
+
 msgctxt "RadiateHeatInSpace.STRINGS.OPTIONS.CATEGORIES.SUNRADIATION"
 msgid "Sun radiation"
 msgstr "Излучение солнца"
