@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>a91976c3-ade2-4ae2-9037-b1d6a4a6c545</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Commons</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)ItemsRemovable.cs" />
+    <None Include="$(MSBuildThisFileDirectory)ItemsRemovableSideScreen.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SolidConduitFilteredConsumer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)STRINGS.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)translations" />
+  </ItemGroup>
+</Project>

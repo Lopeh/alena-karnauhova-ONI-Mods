@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 using static HarmonyLib.AccessTools;
 
-namespace Utils
+namespace Commons
 {
     [SkipSaveFileSerialization]
     public class SolidConduitFilteredConsumer : SolidConduitConsumer

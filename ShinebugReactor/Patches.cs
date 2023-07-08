@@ -161,7 +161,7 @@ namespace ShinebugReactor
             private static void Postfix()
             {
                 LocalizationUtils.Translate(typeof(STRINGS));
-                LocalizationUtils.Translate(typeof(Utils.STRINGS));
+                LocalizationUtils.Translate(typeof(Commons.STRINGS));
             }
         }
 

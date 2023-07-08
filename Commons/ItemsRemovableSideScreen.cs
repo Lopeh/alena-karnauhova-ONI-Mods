@@ -2,8 +2,10 @@
 using UnityEngine;
 using PeterHan.PLib.UI;
 
-namespace Utils
+namespace Commons
 {
+    using static STRINGS.UI.UISIDESCREENS;
+
     public class ItemsRemovableSideScreen : SideScreenContent
     {
         protected MultiToggle allowRemoveItemsToggle;
@@ -27,9 +29,9 @@ namespace Utils
                 }
             });
             checkBox.CheckSize = new Vector2(26, 26);
-            checkBox.Text = Utils.STRINGS.UI.UISIDESCREENS.ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTON;
+            checkBox.Text = ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTON;
             checkBox.TextStyle = PUITuning.Fonts.TextDarkStyle;
-            checkBox.ToolTip = Utils.STRINGS.UI.UISIDESCREENS.ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTONTOOLTIP;
+            checkBox.ToolTip = ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTONTOOLTIP;
             checkBox.OnChecked += (s, state) =>
             {
                 targetItemsRemovable.AllowItemRemoval = !targetItemsRemovable.AllowItemRemoval;

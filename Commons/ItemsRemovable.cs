@@ -1,15 +1,15 @@
 ﻿using KSerialization;
 using UnityEngine;
 
-namespace Utils
+namespace Commons
 {
     [SerializationConfig(MemberSerialization.OptIn)]
     public class ItemsRemovable : KMonoBehaviour
     {
         [MyCmpReq]
-        protected Storage storage;
+        protected readonly Storage storage;
         [MyCmpAdd]
-        private CopyBuildingSettings copyBuildingSettings;
+        private readonly CopyBuildingSettings copyBuildingSettings;
         private static readonly EventSystem.IntraObjectHandler<ItemsRemovable> OnCopySettingsDelegate
             = new EventSystem.IntraObjectHandler<ItemsRemovable>((component, data) => component.OnCopySettings(data));
 

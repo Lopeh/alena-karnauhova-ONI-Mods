@@ -1,12 +1,16 @@
-﻿using Utils;
+﻿using Commons;
+using Utils;
 using System.Collections.Generic;
 using TUNING;
 using UnityEngine;
 using PeterHan.PLib.Buildings;
 using GameStrings = STRINGS;
+using static STRINGS.BUILDINGS.PREFABS;
 
 namespace ShinebugReactor
 {
+    using static STRINGS.BUILDINGS.PREFABS;
+
     public class ShinebugReactorConfig : IBuildingConfig
     {
         public const string ID = "ShinebugReactor";
@@ -17,12 +21,13 @@ namespace ShinebugReactor
         //public const float WattageRating = BUILDINGS.ENERGY_CONSUMPTION_WHEN_ACTIVE.TIER7;
         public const float WattageRequired = BUILDINGS.ENERGY_CONSUMPTION_WHEN_ACTIVE.TIER5;
         //public const float PowerSaveEnergyRequired = BUILDINGS.ENERGY_CONSUMPTION_WHEN_ACTIVE.TIER3;
-        public const int EmitRange = 4;
+        public const short EmitRange = 4;
         public const float EmitLeakRate = 0.1f;
         public static float HeatPerSecond;
         public const string FIRE_PORT_ID = "ShinebugReactorFirePort";
         public const string FULL_PORT_ID = "ShinebugReactorFullPort";
-        public static PBuilding PBuilding = new PBuilding(ID, STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.NAME)
+        public static readonly PBuilding PBuilding
+            = new PBuilding(ID, SHINEBUGREACTOR.NAME)
         {
             Width = width,
             Height = height,
@@ -66,18 +71,18 @@ namespace ShinebugReactor
                 buildingDef.LogicInputPorts = new List<LogicPorts.Port>()
                 {
                     LogicPorts.Port.InputPort(FIRE_PORT_ID, new CellOffset(1, 0),
-                    STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.LOGIC_PORT_FIRE,
-                    STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.LOGIC_PORT_FIRE_ACTIVE,
-                    STRINGS.BUILDINGS.PREFABS.SHINEBUGREACTOR.LOGIC_PORT_FIRE_INACTIVE)
+                    SHINEBUGREACTOR.LOGIC_PORT_FIRE,
+                    SHINEBUGREACTOR.LOGIC_PORT_FIRE_ACTIVE,
+                    SHINEBUGREACTOR.LOGIC_PORT_FIRE_INACTIVE)
                 };
                 ConfigureDescriptors(buildingDef);
             }
             buildingDef.LogicOutputPorts = new List<LogicPorts.Port>()
             {
                 LogicPorts.Port.OutputPort(FULL_PORT_ID, new CellOffset(-4, 1),
-                GameStrings.BUILDINGS.PREFABS.STORAGELOCKERSMART.LOGIC_PORT,
-                GameStrings.BUILDINGS.PREFABS.STORAGELOCKERSMART.LOGIC_PORT_ACTIVE,
-                GameStrings.BUILDINGS.PREFABS.STORAGELOCKERSMART.LOGIC_PORT_INACTIVE)
+                STORAGELOCKERSMART.LOGIC_PORT,
+                STORAGELOCKERSMART.LOGIC_PORT_ACTIVE,
+                STORAGELOCKERSMART.LOGIC_PORT_INACTIVE)
             };
             buildingDef.UtilityInputOffset = new CellOffset(-4, 1);
             buildingDef.InputConduitType = ConduitType.Solid;
@@ -111,27 +116,12 @@ namespace ShinebugReactor
         public override void DoPostConfigureComplete(GameObject go)
         {
             PBuilding.DoPostConfigureComplete(go);
+            ConfigureSolidBase(go);
             go.AddOrGet<Automatable>();
-            Storage storage = go.AddOrGet<Storage>();
-            storage.capacityKg = 400f;
-            storage.showInUI = true;
-            storage.showDescriptor = true;
-            storage.SetDefaultStoredItemModifiers(Storage.StandardFabricatorStorage);
-            List<Tag> eggTags = new List<Tag>(1) { GameTags.Egg };
-            //eggTags.AddRange(STORAGEFILTERS.BAGABLE_CREATURES);
-            //eggTags.AddRange(STORAGEFILTERS.SWIMMING_CREATURES);
-
-            //eggTags.AddRange(ShinebugReactor.shinebugEggValues.Keys.Select(x => TagManager.Create(x)));
-            //tree.AcceptedTags.AddRange(eggTags);
-            storage.storageFilters = eggTags;//new List<Tag>() { GameTags.Egg };
+            ConfigureStorage(go);
             go.AddOrGet<ItemsRemovable>();
             SolidConduitFilteredConsumer conduitConsumer = go.AddOrGet<SolidConduitFilteredConsumer>();
             conduitConsumer.alwaysConsume = true;
-            MakeBaseSolid.Def solidBase = go.AddOrGetDef<MakeBaseSolid.Def>();
-            solidBase.occupyFoundationLayer = false;
-            solidBase.solidOffsets = new CellOffset[width];
-            for (int counter = 0, index = -(Mathf.CeilToInt(width / 2f) - 1); counter < width; ++counter, ++index)
-                solidBase.solidOffsets[counter] = new CellOffset(index, 0);
             go.AddOrGetDef<PoweredActiveController.Def>();
             if (DlcManager.FeatureRadiationEnabled())
             {
@@ -143,6 +133,29 @@ namespace ShinebugReactor
             ConfigureVisualSize(go);
         }
 
+        private static Storage ConfigureStorage(GameObject go)
+        {
+            Storage storage = go.AddOrGet<Storage>();
+            storage.capacityKg = 400f;
+            storage.showInUI = true;
+            //storage.showDescriptor = true;
+            storage.SetDefaultStoredItemModifiers(Storage.StandardFabricatorStorage);
+            List<Tag> eggTags = new List<Tag>(1) { GameTags.Egg };
+            //eggTags.AddRange(STORAGEFILTERS.BAGABLE_CREATURES);
+            //eggTags.AddRange(STORAGEFILTERS.SWIMMING_CREATURES);
+
+            //eggTags.AddRange(ShinebugReactor.shinebugEggValues.Keys.Select(x => TagManager.Create(x)));
+            storage.storageFilters = eggTags;//new List<Tag>() { GameTags.Egg };
+            return storage;
+        }
+        private static void ConfigureSolidBase(GameObject go)
+        {
+            MakeBaseSolid.Def solidBase = go.AddOrGetDef<MakeBaseSolid.Def>();
+            solidBase.occupyFoundationLayer = false;
+            solidBase.solidOffsets = new CellOffset[width];
+            for (int counter = 0, index = -(Mathf.CeilToInt(width / 2f) - 1); counter < width; ++counter, ++index)
+                solidBase.solidOffsets[counter] = new CellOffset(index, 0);
+        }
         private static RadiationEmitter ConfigureRadiation(GameObject go)
         {
             RadiationEmitter emitter = go.AddOrGet<RadiationEmitter>();

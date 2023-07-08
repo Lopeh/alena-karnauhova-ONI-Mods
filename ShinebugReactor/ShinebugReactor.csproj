@@ -6,5 +6,6 @@
     </PropertyGroup>
 
     <Import Project="..\Utils\Utils.projitems" Label="Shared" />
+    <Import Project="..\Commons\Commons.projitems" Label="Shared" />
 
 </Project>

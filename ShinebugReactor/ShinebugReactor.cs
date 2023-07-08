@@ -1,5 +1,4 @@
-﻿using Klei.AI;
-using KSerialization;
+﻿using KSerialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +9,12 @@ using HarmonyLib;
 using System.Reflection;
 using Database;
 using MonoMod.Utils;
+using static GameComps;
 
 namespace ShinebugReactor
 {
+    using static STRINGS.BUILDING.STATUSITEMS;
+
     [SerializationConfig(MemberSerialization.OptIn)]
     public class ShinebugReactor : Generator, ISim1000ms, IHighEnergyParticleDirection,
         ISingleSliderControl, IUserControlledCapacity
@@ -23,17 +25,17 @@ namespace ShinebugReactor
 
         #region Components
         [MyCmpReq]
-        protected TreeFilterable treeFilterable;
+        protected readonly TreeFilterable treeFilterable;
         [MyCmpReq]
-        protected LogicPorts logicPorts;
+        protected readonly LogicPorts logicPorts;
         [MyCmpReq]
-        protected Light2D light;
+        protected readonly Light2D light;
         [MyCmpReq]
-        protected Storage storage;
+        protected readonly Storage storage;
         [MyCmpGet]
-        protected HighEnergyParticleStorage particleStorage;
+        protected readonly HighEnergyParticleStorage particleStorage;
         [MyCmpGet]
-        protected RadiationEmitter radiationEmitter;
+        protected readonly RadiationEmitter radiationEmitter;
 
         [Serialize]
         public Ref<HighEnergyParticlePort> capturedByRef = new Ref<HighEnergyParticlePort>();
@@ -57,8 +59,9 @@ namespace ShinebugReactor
         protected bool isFull;
         protected int storageDropCell;
         #region StatusItems
+        public const string StatusItemPrefix = "BUILDING";
         public static readonly StatusItem CreatureCountStatus
-            = new StatusItem("ShinebugReactorCreatures", "BUILDING",
+            = new StatusItem(nameof(SHINEBUGREACTORCREATURES), StatusItemPrefix,
             string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
             false, OverlayModes.None.ID,
             resolve_string_callback: ((str, data) =>
@@ -68,7 +71,7 @@ namespace ShinebugReactor
                 return str;
             }));
         public static readonly StatusItem EggCountStatus
-            = new StatusItem("ShinebugReactorEggs", "BUILDING",
+            = new StatusItem(nameof(SHINEBUGREACTOREGGS), StatusItemPrefix,
             string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
             false, OverlayModes.None.ID,
             resolve_string_callback: ((str, data) =>
@@ -78,7 +81,7 @@ namespace ShinebugReactor
                 return str;
             }));
         public static readonly StatusItem WattageStatus
-            = new StatusItem("ShinebugReactorWattage", "BUILDING",
+            = new StatusItem(nameof(SHINEBUGREACTORWATTAGE), StatusItemPrefix,
             string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
             false, OverlayModes.Power.ID,
             resolve_string_callback: ((str, data) =>
@@ -88,7 +91,7 @@ namespace ShinebugReactor
                 return str;
             }));
         public static readonly StatusItem HEPStatus
-            = new StatusItem("ShinebugReactorHEP", "BUILDING",
+            = new StatusItem(nameof(SHINEBUGREACTORHEP), StatusItemPrefix,
             string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
             false, OverlayModes.Radiation.ID,
             resolve_string_callback: ((str, data) =>
@@ -101,7 +104,7 @@ namespace ShinebugReactor
                 return str;
             }));
         public static readonly StatusItem HEPStorageStatus
-            = new StatusItem("StorageLocker", "BUILDING",
+            = new StatusItem(StorageLockerConfig.ID, StatusItemPrefix,
             string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
             false, OverlayModes.Radiation.ID,
             resolve_string_callback: ((str, data) =>
@@ -115,11 +118,11 @@ namespace ShinebugReactor
                 return str;
             }));
         public static readonly StatusItem NoHEPProductionWarningStatus
-            = new StatusItem("ShinebugReactorNoHEPProductionWarning", "BUILDING",
+            = new StatusItem(nameof(SHINEBUGREACTORNOHEPPRODUCTIONWARNING), StatusItemPrefix,
             string.Empty, StatusItem.IconType.Info, NotificationType.BadMinor,
             false, OverlayModes.Radiation.ID);
         public static readonly StatusItem HEPProductionDisabledStatus
-            = new StatusItem("ShinebugReactorHEPProductionDisabled", "BUILDING",
+            = new StatusItem(nameof(SHINEBUGREACTORHEPPRODUCTIONDISABLED), StatusItemPrefix,
             string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
             false, OverlayModes.Radiation.ID);
         public static StatusItem OperatingEnergyStatusItem;
@@ -189,8 +192,9 @@ namespace ShinebugReactor
         protected override void OnPrefabInit()
         {
             base.OnPrefabInit();
-            Tag[] requiredTagsEggs = { GameTags.Egg };
-            Tag[] requiredTagsCreatures = { GameTags.Creatures.Deliverable };
+            //Tag[] requiredTagsEggs = { GameTags.Egg };
+            //Tag[] requiredTagsCreatures = { GameTags.Creatures.Deliverable };
+            Tag requiredTagCreatures = GameTags.Creatures.Deliverable;
             //filteredStorageEggs = new FilteredStorage(this, requiredTagsEggs, null, this, false, Db.Get().ChoreTypes.PowerFetch);
             filteredStorageEggs = new FilteredStorage(this, null, this, false, Db.Get().ChoreTypes.PowerFetch);
             //filteredStorageCreatures = new FilteredStorage(this, /*null*/requiredTagsCreatures, null, /*null*/this, false, Db.Get().ChoreTypes.PowerFetch);
@@ -223,7 +227,7 @@ namespace ShinebugReactor
             }
             treeFilterable.OnFilterChanged += OnFilterChanged;
             accumulator = Game.Instance.accumulators.Add("Element", this);
-            structureTemperature = GameComps.StructureTemperatures.GetHandle(gameObject);
+            structureTemperature = StructureTemperatures.GetHandle(gameObject);
             //UpdateLogic();
 
             selectable.SetStatusItem(Db.Get().StatusItemCategories.Main, CreatureCountStatus, this);
@@ -284,7 +288,7 @@ namespace ShinebugReactor
         {
             if (egg == null) return;
             Unsubscribe((int)GameHashes.OnStorageChange, OnStorageChanged);
-            storage.Drop(egg).AddTag(GameTags.StoredPrivate);
+            storage.Drop(egg);
             Subscribe((int)GameHashes.OnStorageChange, OnStorageChanged);
             string shinebugName = egg.PrefabID().Name.Replace(EGG_POSTFIX, string.Empty).Replace(BABY_POSTFIX, string.Empty);
             Creatures.Add(new ShinebugSimulator(shinebugName, age));
@@ -470,7 +474,7 @@ namespace ShinebugReactor
                 if (particleStorage && isLogicActive && (rad > 0f))
                 {
                     CurrentHEP = rad * HighEnergyParticleSpawnerConfig.HEP_PER_RAD;
-                    GameComps.StructureTemperatures.ProduceEnergy(structureTemperature,
+                    StructureTemperatures.ProduceEnergy(structureTemperature,
                         ShinebugReactorConfig.HeatPerSecond * dt,
                         GameStrings.BUILDING.STATUSITEMS.OPERATINGENERGY.OPERATING, dt);
                     if (particleStorage.RemainingCapacity() > 0f)
@@ -531,17 +535,18 @@ namespace ShinebugReactor
 
         protected void UpdateStatusItem()
         {
+            Db db = Db.Get();
             //selectable.ReplaceStatusItem(statusHandles[0], CreatureCountStatus, this);
             //selectable.SetStatusItem(Db.Get().StatusItemCategories.Main, CreatureCountStatus, this);
             //selectable.ToggleStatusItem(EggCountStatus, true, this);
-            selectable.SetStatusItem(Db.Get().StatusItemCategories.Power,
-                operational.IsActive ? WattageStatus : Db.Get().BuildingStatusItems.GeneratorOffline, this);
+            selectable.SetStatusItem(db.StatusItemCategories.Power, operational.IsActive ?
+                WattageStatus : db.BuildingStatusItems.GeneratorOffline, this);
             if (particleStorage)
             {
                 StatusItem currentHEPStatus = HEPStatus;
                 if (CurrentWattage <= 0f && particleStorage.HasRadiation())
                 {
-                    currentHEPStatus = Db.Get().BuildingStatusItems.LosingRadbolts;
+                    currentHEPStatus = db.BuildingStatusItems.LosingRadbolts;
                 }
                 else if (!isLogicActive)
                 {
@@ -551,8 +556,8 @@ namespace ShinebugReactor
                 {
                     currentHEPStatus = NoHEPProductionWarningStatus;
                 }
-                selectable.SetStatusItem(Db.Get().StatusItemCategories.Stored, currentHEPStatus, this);
-                selectable.SetStatusItem(Db.Get().StatusItemCategories.OperatingEnergy,
+                selectable.SetStatusItem(db.StatusItemCategories.Stored, currentHEPStatus, this);
+                selectable.SetStatusItem(db.StatusItemCategories.OperatingEnergy,
                     (currentHEPStatus == HEPStatus) ? OperatingEnergyStatusItem : null,
                     structureTemperature.index);
                 /*selectable.SetStatusItem(Db.Get().StatusItemCategories.Stored,

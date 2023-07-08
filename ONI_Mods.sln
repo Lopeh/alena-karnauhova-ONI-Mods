@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32505.173
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -31,6 +30,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RadiateHeatInSpace", "RadiateHeatInSpace\RadiateHeatInSpace.csproj", "{25B0E306-9E12-4BAD-A681-FE6AD388C3C0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Creature_Motion_Sensor", "CreatureMotionSensor\Creature_Motion_Sensor.csproj", "{044D4429-A9F7-499F-AAAC-F7F21ADDDC2E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Commons", "Commons\Commons.shproj", "{A91976C3-ADE2-4AE2-9037-B1D6A4A6C545}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4EBEAC62-5470-4962-A8E0-7D37A8DA7A77}"
 	ProjectSection(SolutionItems) = preProject
@@ -93,10 +94,12 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Utils\Utils.projitems*{044d4429-a9f7-499f-aaac-f7f21adddc2e}*SharedItemsImports = 5
 		Utils\Utils.projitems*{25b0e306-9e12-4bad-a681-fe6ad388c3c0}*SharedItemsImports = 5
+		Commons\Commons.projitems*{5d3d010d-cb65-443c-adb9-ab6417814a73}*SharedItemsImports = 5
 		Utils\Utils.projitems*{5d3d010d-cb65-443c-adb9-ab6417814a73}*SharedItemsImports = 5
 		Utils\Utils.projitems*{6e4767e7-61e8-4fdb-9ce3-4eb55828fe9e}*SharedItemsImports = 5
 		Utils\Utils.projitems*{7808f499-086c-48d3-be54-ee9049a61169}*SharedItemsImports = 13
 		Utils\Utils.projitems*{95fb1a18-fed5-418f-9598-86bda3273707}*SharedItemsImports = 5
+		Commons\Commons.projitems*{a91976c3-ade2-4ae2-9037-b1d6a4a6c545}*SharedItemsImports = 13
 		Utils\Utils.projitems*{f990cde0-2336-4e8a-86d7-c58ec2e38eb0}*SharedItemsImports = 5
 		Utils\Utils.projitems*{fc03bbe4-e624-47a1-a877-bce7dfb6958d}*SharedItemsImports = 5
 	EndGlobalSection

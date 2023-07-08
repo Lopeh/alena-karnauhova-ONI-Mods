@@ -1,7 +1,7 @@
 ﻿using GameStrings = STRINGS;
 using static STRINGS.UI;
 
-namespace Utils
+namespace Commons
 {
     public static class STRINGS
     {
@@ -11,9 +11,9 @@ namespace Utils
             {
                 public static class ITEMSREMOVABLE_SIDE_SCREEN
                 {
-                    public static LocString TITLE = "Allowable Storage";
-                    public static LocString ALLOWREMOVALBUTTON = "Allow items removal";
-                    public static LocString ALLOWREMOVALBUTTONTOOLTIP = "Allow to remove items from this storage.";
+                    public static readonly LocString TITLE = "Allowable Storage";
+                    public static readonly LocString ALLOWREMOVALBUTTON = "Allow items removal";
+                    public static readonly LocString ALLOWREMOVALBUTTONTOOLTIP = "Allow to remove items from this storage.";
                 }
             }
         }

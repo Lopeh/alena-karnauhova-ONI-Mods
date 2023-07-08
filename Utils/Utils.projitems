@@ -9,12 +9,7 @@
     <Import_RootNamespace>Utils</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ItemsRemovable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ItemsRemovableSideScreen.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)STRINGS.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SolidConduitFilteredConsumer.cs" />
     <None Include="$(MSBuildThisFileDirectory)BuildingUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LocalizationUtils.cs" />
-    <None Include="$(MSBuildThisFileDirectory)translations\ru.po" />
   </ItemGroup>
 </Project>
