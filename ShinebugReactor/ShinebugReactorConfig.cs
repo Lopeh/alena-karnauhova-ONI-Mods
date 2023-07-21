@@ -37,8 +37,9 @@ namespace ShinebugReactor
             Ingredients =
             {
                 new BuildIngredient(MATERIALS.GLASS, tier: 5),
+                new BuildIngredient(MATERIALS.REFINED_METAL, tier: 4),
                 //new BuildIngredient(MATERIALS.REFINED_METAL, tier: 3),
-                new BuildIngredient(MATERIALS.BUILDABLERAW, tier: 4),
+                //new BuildIngredient(MATERIALS.BUILDABLERAW, tier: 4),
             },
             Placement = BuildLocationRule.Anywhere,
             //IndustrialMachine = true,
@@ -125,7 +126,9 @@ namespace ShinebugReactor
             go.AddOrGetDef<PoweredActiveController.Def>();
             if (DlcManager.FeatureRadiationEnabled())
             {
-                go.AddOrGet<HighEnergyParticleStorage>().capacity = HighEnergyParticleSpawnerConfig.MAX_SLIDER + 1f;
+                HighEnergyParticleStorage particleStorage = go.AddOrGet<HighEnergyParticleStorage>();
+                particleStorage.capacity = HighEnergyParticleSpawnerConfig.MAX_SLIDER;
+                particleStorage.showCapacityStatusItem = true;
                 ConfigureRadiation(go);
             }
             ConfigureLight(go);

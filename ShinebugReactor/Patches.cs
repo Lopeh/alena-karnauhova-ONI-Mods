@@ -118,29 +118,13 @@ namespace ShinebugReactor
             }
         }
 
-        [HarmonyPatch(typeof(BuildingStatusItems), "CreateStatusItems")]
+        [HarmonyPatch(typeof(Db), nameof(Db.Initialize))]
         private static class Tooltips
         {
-            private static void Postfix(BuildingStatusItems __instance)
+            private static void Postfix(Db __instance)
             {
-                ShinebugReactor.AddStatusItemsToDatabase(__instance);
-                /*ShinebugReactor.CreatureCountStatus = Traverse.Create(__instance).Method("CreateStatusItem", new Type[]
-                {
-                    typeof(string), typeof(string), typeof(string), typeof(StatusItem.IconType), typeof(NotificationType), typeof(bool), typeof(HashedString), typeof(bool), typeof(int)
-                }).GetValue<StatusItem>(new object[]
-                {
-                    "ShinebugReactorWattage", "BUILDING",
-                    string.Empty, StatusItem.IconType.Info, NotificationType.Neutral,
-                    false, OverlayModes.Power.ID//, true, 129022
-                });
-                ShinebugReactor.CreatureCountStatus.resolveStringCallback = ((str, data) =>
-                {
-                    ShinebugReactor shinebugReactor = (ShinebugReactor)data;
-                    str = str.Replace("{Wattage}", GameUtil.GetFormattedWattage(shinebugReactor.CurrentWattage))
-                    .Replace("{Rads}", GameUtil.GetFormattedRads(shinebugReactor.CurrentHEP))
-                    .Replace("{creatures}", shinebugReactor.Creatures.Count.ToString());
-                    return str;
-                });*/
+                ShinebugReactor.AddStatusItemsToDatabase(__instance.BuildingStatusItems);
+                ShinebugReactor.InitializeStatusCategory(__instance.StatusItemCategories);
             }
         }
 
@@ -149,7 +133,7 @@ namespace ShinebugReactor
         {
             private static void Postfix(StructureTemperatureComponents __instance)
             {
-                ShinebugReactor.OperatingEnergyStatusItem =
+                ShinebugReactor.OperatingEnergyStatus =
                     Traverse.Create(__instance).Field("operatingEnergyStatusItem")
                     .GetValue<StatusItem>();
             }
