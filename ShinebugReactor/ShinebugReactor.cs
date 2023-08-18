@@ -567,7 +567,7 @@ namespace ShinebugReactor
                 selectable.SetStatusItem(RadboltProductionStatusCategory, currentHEPStatus, this);
                 selectable.SetStatusItem(db.StatusItemCategories.OperatingEnergy,
                     (CurrentHEP > 0f) ? OperatingEnergyStatus : null,
-                    structureTemperature.index);
+                    StructureTemperatures.GetPayload(structureTemperature).simHandleCopy);
                 /*selectable.SetStatusItem(Db.Get().StatusItemCategories.Stored,
                 //statusHandles[2] = selectable.ReplaceStatusItem(statusHandles[2],
                     CurrentWattage > 0f || particleStorage.IsEmpty() ?
