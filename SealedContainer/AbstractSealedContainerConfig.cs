@@ -1,35 +1,31 @@
 ﻿using System.Collections.Generic;
-using TUNING;
 using UnityEngine;
 using PeterHan.PLib.Buildings;
-using GameStrings = STRINGS;
 
 namespace SealedContainer
 {
-    public abstract class AbstractSealedContainerConfig : IBuildingConfig
+    public abstract class AbstractSealedContainerConfig : StorageLockerConfig
     {
+        protected PBuilding InstancePBuilding;
+        protected List<Storage.StoredItemModifier> StorageItemModifiers;
+        public override BuildingDef CreateBuildingDef()
+        {
+            return InstancePBuilding.CreateDef();
+        }
         public override void ConfigureBuildingTemplate(GameObject go, Tag prefab_tag)
         {
-            //SoundEventVolumeCache.instance.AddVolume("storagelocker_kanim", "StorageLocker_Hit_metallic_low", NOISE_POLLUTION.NOISY.TIER1);
-            //Prioritizable.AddRef(go);
+            base.ConfigureBuildingTemplate(go, prefab_tag);
+            InstancePBuilding.ConfigureBuildingTemplate(go);
+
             Storage storage = go.AddOrGet<Storage>();
-
-            //Changes here
             storage.capacityKg = Options.Instance.Capacity;
-
-            storage.showInUI = true;
-            storage.allowItemRemoval = true;
-            storage.showDescriptor = true;
-            storage.storageFilters = STORAGEFILTERS.NOT_EDIBLE_SOLIDS;
-            storage.storageFullMargin = STORAGE.STORAGE_LOCKER_FILLED_MARGIN;
-            storage.fetchCategory = Storage.FetchCategory.GeneralStorage;
-            storage.showCapacityStatusItem = true;
-            storage.showCapacityAsMainStatus = true;
-            go.AddOrGet<CopyBuildingSettings>().copyGroupTag = GameTags.StorageLocker;
-            go.AddOrGet<SealedContainer>();
-            go.AddOrGet<UserNameable>();
-            go.AddOrGetDef<RocketUsageRestriction.Def>();
-            go.AddOrGetDef<StorageController.Def>();
+            storage.SetDefaultStoredItemModifiers(StorageItemModifiers);
+            go.AddOrGet<Automatable>();
         }
+        /*public override void DoPostConfigureComplete(GameObject go)
+        {
+            base.DoPostConfigureComplete(go);
+            InstancePBuilding.DoPostConfigureComplete(go);
+        }*/
     }
 }

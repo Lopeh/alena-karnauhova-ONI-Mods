@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using TUNING;
+﻿using TUNING;
 using UnityEngine;
 using PeterHan.PLib.Buildings;
 using GameStrings = STRINGS;
@@ -9,7 +8,8 @@ namespace SealedContainer
     public class SealedContainerConfig : AbstractSealedContainerConfig
     {
         public const string ID = "SealedContainer";
-        public static PBuilding PBuilding = new PBuilding(ID, STRINGS.BUILDINGS.PREFABS.SEALEDCONTAINER.NAME)
+        public static readonly PBuilding PBuilding
+            = new PBuilding(ID, STRINGS.BUILDINGS.PREFABS.SEALEDCONTAINER.NAME)
         {
             Width = 1,
             Height = 2,
@@ -32,19 +32,10 @@ namespace SealedContainer
             EffectText = null,
         };
 
-        public override BuildingDef CreateBuildingDef()
+        public SealedContainerConfig()
         {
-            return PBuilding.CreateDef();
+            InstancePBuilding = PBuilding;
+            StorageItemModifiers = Storage.StandardSealedStorage;
         }
-
-        public override void ConfigureBuildingTemplate(GameObject go, Tag prefab_tag)
-        {
-            PBuilding.ConfigureBuildingTemplate(go);
-            base.ConfigureBuildingTemplate(go, prefab_tag);
-            Storage storage = go.GetComponent<Storage>();
-            storage.SetDefaultStoredItemModifiers(Storage.StandardSealedStorage);
-        }
-
-        public override void DoPostConfigureComplete(GameObject go) => PBuilding.DoPostConfigureComplete(go);
     }
 }

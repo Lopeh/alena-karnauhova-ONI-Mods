@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using TUNING;
+﻿using TUNING;
 using UnityEngine;
 using PeterHan.PLib.Buildings;
 using GameStrings = STRINGS;
@@ -9,7 +8,8 @@ namespace SealedContainer
     public class InsulatedContainerConfig : AbstractSealedContainerConfig
     {
         public const string ID = "InsulatedContainer";
-        public static PBuilding PBuilding = new PBuilding(ID, STRINGS.BUILDINGS.PREFABS.INSULATEDCONTAINER.NAME)
+        public static readonly PBuilding PBuilding
+            = new PBuilding(ID, STRINGS.BUILDINGS.PREFABS.INSULATEDCONTAINER.NAME)
         {
             Width = 1,
             Height = 2,
@@ -32,6 +32,12 @@ namespace SealedContainer
             EffectText = null,
         };
 
+        public InsulatedContainerConfig()
+        {
+            InstancePBuilding = PBuilding;
+            StorageItemModifiers = Storage.StandardInsulatedStorage;
+        }
+
         public override BuildingDef CreateBuildingDef()
         {
             if (!Options.Instance.RequireSuperInsulator)
@@ -39,17 +45,7 @@ namespace SealedContainer
                 PBuilding.Ingredients[0] = new BuildIngredient(nameof(SimHashes.Ceramic), tier: 6);
                 PBuilding.Ingredients[1] = new BuildIngredient(MATERIALS.PLASTIC, tier: 3);
             }
-            return PBuilding.CreateDef();
+            return base.CreateBuildingDef();
         }
-
-        public override void ConfigureBuildingTemplate(GameObject go, Tag prefab_tag)
-        {
-            PBuilding.ConfigureBuildingTemplate(go);
-            base.ConfigureBuildingTemplate(go, prefab_tag);
-            Storage storage = go.GetComponent<Storage>();
-            storage.SetDefaultStoredItemModifiers(Storage.StandardInsulatedStorage);
-        }
-
-        public override void DoPostConfigureComplete(GameObject go) => PBuilding.DoPostConfigureComplete(go);
     }
 }
