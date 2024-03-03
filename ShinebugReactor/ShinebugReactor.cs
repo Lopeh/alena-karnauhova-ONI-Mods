@@ -177,7 +177,7 @@ namespace ShinebugReactor
         public float GetSliderValue(int index) => ParticleThreshold;
         public void SetSliderValue(float percent, int index) => ParticleThreshold = percent;
         public string GetSliderTooltipKey(int index) => "STRINGS.UI.UISIDESCREENS.RADBOLTTHRESHOLDSIDESCREEN.TOOLTIP";
-        public string GetSliderTooltip() => string.Format(Strings.Get("STRINGS.UI.UISIDESCREENS.RADBOLTTHRESHOLDSIDESCREEN.TOOLTIP"), ParticleThreshold);
+        public string GetSliderTooltip(int index) => string.Format(Strings.Get("STRINGS.UI.UISIDESCREENS.RADBOLTTHRESHOLDSIDESCREEN.TOOLTIP"), ParticleThreshold);
         #endregion
         public static void AddStatusItemsToDatabase(BuildingStatusItems statusItemsList)
         {

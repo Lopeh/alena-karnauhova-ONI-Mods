@@ -34,10 +34,9 @@
         <Reference Include="Assembly-CSharp-firstpass" />
         <Reference Include="UnityEngine" />
         <Reference Include="UnityEngine.CoreModule" />
-        <!--Reference Include="UnityEngine.InputLegacyModule" /-->
     </ItemGroup>
     <ItemGroup Condition="'$(UsePLib)' == 'true'">
-        <PackageReference Include="PLib" Version="4.13" />
+        <PackageReference Include="PLib" Version="4.15" />
         <Reference Include="Newtonsoft.Json" />
         <Reference Include="Unity.TextMeshPro" />
         <Reference Include="UnityEngine.TextRenderingModule" />

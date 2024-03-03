@@ -1,10 +1,11 @@
 ﻿using KSerialization;
 using UnityEngine;
+using static Commons.STRINGS.UI.UISIDESCREENS;
 
 namespace ShinebugReactor
 {
     [SerializationConfig(MemberSerialization.OptIn)]
-    public class ItemsRemovable : KMonoBehaviour
+    public class ItemsRemovable : KMonoBehaviour, ICheckboxControl
     {
         [MyCmpReq]
         protected readonly Storage storage;
@@ -15,15 +16,18 @@ namespace ShinebugReactor
 
         [Serialize]
         private bool allowItemRemoval = true;
-        public bool AllowItemRemoval
+
+        #region ICheckboxControl
+        public string CheckboxTitleKey => "STRINGS.UI.UISIDESCREENS.ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTON";
+        public string CheckboxLabel => ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTON;
+        public string CheckboxTooltip => ITEMSREMOVABLE_SIDE_SCREEN.ALLOWREMOVALBUTTONTOOLTIP;
+        public bool GetCheckboxValue() => allowItemRemoval;
+        public void SetCheckboxValue(bool value)
         {
-            get => allowItemRemoval;
-            set
-            {
-                allowItemRemoval = value;
-                UpdateStorageModifiers();
-            }
+            allowItemRemoval = value;
+            UpdateStorageModifiers();
         }
+        #endregion
 
         public void UpdateStorageModifiers()
         {
@@ -42,7 +46,7 @@ namespace ShinebugReactor
         {
             ItemsRemovable component = ((GameObject)data).GetComponent<ItemsRemovable>();
             if (component == null) return;
-            AllowItemRemoval = component.AllowItemRemoval;
+            SetCheckboxValue(component.GetCheckboxValue());
         }
     }
 }

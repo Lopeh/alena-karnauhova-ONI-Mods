@@ -85,14 +85,6 @@ namespace ShinebugReactor
                 }
             }
         }
-        [HarmonyPatch(typeof(DetailsScreen), "OnPrefabInit")]
-        private static class DetailsScreen_Patch
-        {
-            private static void Postfix()
-            {
-                PUIUtils.AddSideScreenContent<ItemsRemovableSideScreen>();
-            }
-        }
 
         private static void FixStoragePriority(Storage storage)
         {
