@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using PeterHan.PLib.Options;
 
 namespace MaterialColoredTilesAndMore
 {
-    [Serializable] [RestartRequired]
-    public class Options : SingletonOptions<Options>
+    [Serializable]
+    public class Options : SingletonOptions<Options>, IOptions
     {
         [JsonProperty]
         [Option("STRINGS.OPTIONS.BRIGHTNESS.NAME", "STRINGS.OPTIONS.BRIGHTNESS.DESC")]
@@ -43,5 +44,14 @@ namespace MaterialColoredTilesAndMore
         [JsonProperty]
         [Option("STRINGS.OPTIONS.FARMTILES.NAME")]
         public bool FarmTiles { get; set; }
+
+        public IEnumerable<IOptionsEntry> CreateOptions() => null;
+
+        public void OnOptionsChanged()
+        {
+            instance = POptions.ReadSettings<Options>() ?? new Options();
+            Patches.AcceptedTags.Clear();
+            Patches.AcceptedKeywords.Clear();
+        }
     }
 }

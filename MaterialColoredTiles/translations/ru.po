@@ -34,8 +34,8 @@ msgid "Walls"
 msgstr "Стены"
 
 msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.WALLS.DESC"
-msgid "Exterior Wall and Tempshift Plate"
-msgstr "Гипсокартон и термальная пластина"
+msgid "Backwalls, e.g. Exterior Wall and Tempshift Plate"
+msgstr "Стены заднего плана, такие как гипсокартон и термальная пластина"
 
 msgctxt "MaterialColoredTilesAndMore.STRINGS.OPTIONS.DOORS.NAME"
 msgid "Doors"
