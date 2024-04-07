@@ -45,9 +45,9 @@ namespace MaterialColoredTilesAndMore
             }
         }
 
-        public static Color GetColor(Element element)
+        public static Color GetColor(PrimaryElement element)
         {
-            Color color = element.substance?.colour ?? Color.clear;
+            Color color = element.Element?.substance?.colour ?? Color.clear;
             color *= Options.Instance.Brightness;
             color.a = 1f;
             return color;
@@ -58,9 +58,11 @@ namespace MaterialColoredTilesAndMore
         {
             private static void Postfix(ref Color __result, int cell, SimHashes element)
             {
-                if (!Options.Instance.Tiles || element == SimHashes.Void) return;
-                Element elem = ElementLoader.FindElementByHash(element);
-                if (elem != null)
+                GameObject tile = Grid.Objects[cell, (int)ObjectLayer.FoundationTile];
+                if (!Options.Instance.Tiles
+                    || tile?.TryGetComponent(out BuildingComplete _) != true)
+                    return;
+                if (tile.TryGetComponent(out PrimaryElement elem))
                 {
                     __result *= GetColor(elem);
                 }
@@ -76,7 +78,7 @@ namespace MaterialColoredTilesAndMore
             if (!building.prefabid.Tags.Overlaps(AcceptedTags)
                 && AcceptedKeywords.FindIndex(x => building.prefabid.name.Contains(x)) == -1)
                 return;
-            Element element = building.primaryElement?.Element;
+            PrimaryElement element = building.primaryElement;
             if (element != null)
             {
                 kAnimController.TintColour = GetColor(element);
