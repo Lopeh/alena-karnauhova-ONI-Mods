@@ -18,12 +18,12 @@ msgctxt "BlockDecorBehindWalls.STRINGS.MODIFIERS.BLOCKDECORBEHINDWALLS.DESC"
 msgid "This building is behind the wall"
 msgstr "Это строение находится за стеной"
 
-#. BlockDecorBehindWalls.STRINGS.OPTIONS.LAYER.NAME
-msgctxt "BlockDecorBehindWalls.STRINGS.OPTIONS.LAYER.NAME"
-msgid "Walls layer"
-msgstr "Слой стен"
+#. BlockDecorBehindWalls.STRINGS.OPTIONS.AFFECTHEAVYWIRES.NAME
+msgctxt "BlockDecorBehindWalls.STRINGS.OPTIONS.AFFECTHEAVYWIRES.NAME"
+msgid "Affect buildings that cannot be placed in tiles"
+msgstr "Влиять на строения, которые не могут быть размещены внутри клеток"
 
-#. BlockDecorBehindWalls.STRINGS.OPTIONS.LAYER.DESC
-msgctxt "BlockDecorBehindWalls.STRINGS.OPTIONS.LAYER.DESC"
-msgid "Determines layer where drywalls and tempshift plates will be displayed."
-msgstr "Устанавливает слой, на котором будут отображаться гипсокартон и термальные пластины."
+#. BlockDecorBehindWalls.STRINGS.OPTIONS.AFFECTHEAVYWIRES.DESC
+msgctxt "BlockDecorBehindWalls.STRINGS.OPTIONS.AFFECTHEAVYWIRES.DESC"
+msgid "E.g. heavy-watt wires"
+msgstr "Например, провода высокой мощности"

@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+using PeterHan.PLib.Core;
+using PeterHan.PLib.Options;
 using UnityEngine;
+using Utils;
 
 namespace BlockDecorBehindWalls
 {
@@ -10,23 +13,25 @@ namespace BlockDecorBehindWalls
     {
         public static bool CheckBackwall(int cell)
         {
-            return Grid.IsValidCell(cell) && Grid.Objects[cell, (int)ObjectLayer.Backwall];
+            return Grid.IsValidCell(cell)
+                && Grid.Objects[cell, (int)ObjectLayer.Backwall]?
+                .GetComponent<BuildingComplete>();
         }
 
         [HarmonyPatch(typeof(DecorProvider), "AddDecor")]
-        protected static class DecorProviderPatches
+        private static class DecorProviderPatches
         {
             private static bool Prefix(DecorProvider __instance)
             {
                 BuildingComplete building = __instance.GetComponent<BuildingComplete>();
                 BuildingDef def = building?.Def;
-                if (def && (def.SceneLayer < Grid.SceneLayer.LogicGatesFront))
+                if (def && (def.SceneLayer < Grid.SceneLayer.LogicGatesFront)
+                    && (Options.Instance.AffectHeavyWires
+                    || def.BuildLocationRule != BuildLocationRule.NotInTiles)
+                    && building.PlacementCells.All(CheckBackwall))
                 {
-                    if (building?.PlacementCells?.All(CheckBackwall) == true)
-                    {
-                        __instance.currDecor = 0.0f;
-                        return false;
-                    }
+                    __instance.currDecor = 0.0f;
+                    return false;
                 }
                 return true;
             }
@@ -41,15 +46,12 @@ namespace BlockDecorBehindWalls
                     for (int layer = 0; layer < (int)ObjectLayer.NumLayers; ++layer)
                     {
                         GameObject go = Grid.Objects[cell, layer];
-                        if (go)
+                        if (!go) continue;
+                        DecorProvider decorProvider = go.GetComponent<DecorProvider>();
+                        BuildingDef def = go.GetComponent<BuildingComplete>()?.Def;
+                        if (decorProvider && def)
                         {
-                            BuildingDef def = go.GetComponent<BuildingComplete>()?.Def;
-                            DecorProvider decorProvider = go.GetComponent<DecorProvider>();
-                            if (decorProvider && def
-                                && (def.SceneLayer < Grid.SceneLayer.LogicGatesFront))
-                            {
-                                decorProvider.Refresh();
-                            }
+                            decorProvider.Refresh();
                         }
                     }
                 }
@@ -57,7 +59,7 @@ namespace BlockDecorBehindWalls
         }
 
         [HarmonyPatch(typeof(BuildingComplete), "OnSpawn")]
-        protected static class ConstructBackwallPatches
+        private static class ConstructBackwallPatches
         {
             private static void Postfix(BuildingComplete __instance)
             {
@@ -66,12 +68,25 @@ namespace BlockDecorBehindWalls
         }
 
         [HarmonyPatch(typeof(BuildingComplete), "OnCleanUp")]
-        protected static class DeconstructBackwallPatches
+        private static class DeconstructBackwallPatches
         {
             private static void Postfix(BuildingComplete __instance)
             {
                 UpdateDecorBehindWall(__instance);
             }
+        }
+
+        public override void OnLoad(Harmony harmony)
+        {
+            base.OnLoad(harmony);
+            PUtil.InitLibrary();
+            new POptions().RegisterOptions(this, typeof(Options));
+        }
+
+        [HarmonyPatch(typeof(Localization), nameof(Localization.Initialize))]
+        private static class Localization_Initialize_Patch
+        {
+            private static void Postfix() => LocalizationUtils.Translate(typeof(STRINGS));
         }
     }
 }

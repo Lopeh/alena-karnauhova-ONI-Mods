@@ -11,5 +11,13 @@ namespace BlockDecorBehindWalls
                 public static LocString DESC = "This building is behind the wall";
             }
         }
+        public static class OPTIONS
+        {
+            public static class AFFECTHEAVYWIRES
+            {
+                public static readonly LocString NAME = "Affect buildings that cannot be placed in tiles";
+                public static readonly LocString DESC = "E.g. heavy-watt wires";
+            }
+        }
     }
 }

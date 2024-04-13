@@ -3,22 +3,17 @@
     <PropertyGroup>
         <ModName>Block Decor Effects Behind Walls</ModName>
         <MinimumSupportedBuild>509629</MinimumSupportedBuild>
+        <UsePLib>true</UsePLib>
     </PropertyGroup>
+
+    <Import Project="..\Utils\Utils.projitems" Label="Shared" />
 
     <ItemGroup>
       <Compile Remove="BlockDecorBehindWalls_Old.cs" />
-      <Compile Remove="STRINGS.cs" />
     </ItemGroup>
 
     <ItemGroup>
       <None Include="BlockDecorBehindWalls_Old.cs" />
-      <None Include="STRINGS.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="translations\ru.po">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
 
 </Project>
