@@ -21,43 +21,7 @@ namespace ShinebugReactor
     {
         public const string EGG_POSTFIX = "Egg";
         public const string BABY_POSTFIX = "Baby";
-        public const float RADIUS_FACTOR = 26.5f;
-
-        #region Components
-        [MyCmpReq]
-        protected readonly TreeFilterable treeFilterable;
-        [MyCmpReq]
-        protected readonly LogicPorts logicPorts;
-        [MyCmpReq]
-        protected readonly Light2D light;
-        [MyCmpReq]
-        protected readonly Storage storage;
-        [MyCmpGet]
-        protected readonly HighEnergyParticleStorage particleStorage;
-        [MyCmpGet]
-        protected readonly RadiationEmitter radiationEmitter;
-
-        [Serialize]
-        public Ref<HighEnergyParticlePort> capturedByRef = new Ref<HighEnergyParticlePort>();
-        #endregion
-        protected HandleVector<int>.Handle accumulator;
-        protected HandleVector<int>.Handle structureTemperature;
-        [Serialize]
-        protected EightDirection _direction;
-        protected EightDirectionController directionController;
-
-        //protected Guid[] statusHandles = new Guid[3];
-        protected Traverse<FetchList2> fetchListEggs;
-        protected FilteredStorage filteredStorageEggs;//, filteredStorageCreatures;
-        //protected Action<object> fsOnStorageChanged;
-        [Serialize]
-        protected int UserCapacity = 50;
-        [Serialize]
-        public float ParticleThreshold = 100f;
-        protected bool isLogicActive;
-        //public bool radiationEnabled;
-        protected bool isFull;
-        protected int storageDropCell;
+        public const float CYCLE_LENGTH = 600f;
         #region StatusItems
         public const string RadboltProductionStatusCategoryID = "ShinebugReactorRadboltProduction";
         protected static StatusItemCategory RadboltProductionStatusCategory;
@@ -127,6 +91,42 @@ namespace ShinebugReactor
             false, OverlayModes.Radiation.ID);
         public static StatusItem OperatingEnergyStatus;
         #endregion
+
+        #region Components
+        [MyCmpReq]
+        protected readonly TreeFilterable treeFilterable;
+        [MyCmpReq]
+        protected readonly LogicPorts logicPorts;
+        [MyCmpReq]
+        protected readonly Light2D light;
+        [MyCmpReq]
+        protected readonly Storage storage;
+        [MyCmpGet]
+        protected readonly HighEnergyParticleStorage particleStorage;
+        [MyCmpGet]
+        protected readonly RadiationEmitter radiationEmitter;
+
+        //[Serialize]
+        //public Ref<HighEnergyParticlePort> capturedByRef = new Ref<HighEnergyParticlePort>();
+        #endregion
+        protected HandleVector<int>.Handle accumulator;
+        protected HandleVector<int>.Handle structureTemperature;
+        [Serialize]
+        protected EightDirection _direction;
+        protected EightDirectionController directionController;
+
+        //protected Guid[] statusHandles = new Guid[3];
+        protected Traverse<FetchList2> fetchListEggs;//, fetchListCreatures;
+        protected FilteredStorage filteredStorageEggs;//, filteredStorageCreatures;
+        //protected Action<object> fsOnStorageChanged;
+        [Serialize]
+        protected int UserCapacity = 50;
+        [Serialize]
+        public float ParticleThreshold = 100f;
+        protected bool isLogicActive;
+        //public bool radiationEnabled;
+        protected bool isFull;
+        protected int storageDropCell;
         protected float emitRads;
         /*[Serialize]
         private List<ShinebugEggSimulator> _shinebugEggs;*/
@@ -194,23 +194,24 @@ namespace ShinebugReactor
             RadboltProductionStatusCategory = new StatusItemCategory(
                 RadboltProductionStatusCategoryID, categories, RadboltProductionStatusCategoryID);
         }
+        protected (FilteredStorage FilteredStorage, Traverse<FetchList2> FetchList)
+            MakeFilteredStorage(in Tag requiredTag, MethodInfo method)
+        {
+            FilteredStorage fs = new FilteredStorage(this, null, this, false, Db.Get().ChoreTypes.PowerFetch);
+            fs.SetRequiredTag(requiredTag);
+            var onStorageChanged = method.CreateDelegate<Action<object>>(fs);
+            Unsubscribe((int)GameHashes.OnStorageChange, onStorageChanged);
+            var traverse = Traverse.Create(fs).Field<FetchList2>("fetchList");
+            return (fs, traverse);
+        }
         protected override void OnPrefabInit()
         {
             base.OnPrefabInit();
-            //Tag[] requiredTagsEggs = { GameTags.Egg };
-            //Tag[] requiredTagsCreatures = { GameTags.Creatures.Deliverable };
-            Tag requiredTagCreatures = GameTags.Creatures.Deliverable;
-            //filteredStorageEggs = new FilteredStorage(this, requiredTagsEggs, null, this, false, Db.Get().ChoreTypes.PowerFetch);
-            filteredStorageEggs = new FilteredStorage(this, null, this, false, Db.Get().ChoreTypes.PowerFetch);
-            //filteredStorageCreatures = new FilteredStorage(this, /*null*/requiredTagsCreatures, null, /*null*/this, false, Db.Get().ChoreTypes.PowerFetch);
             MethodInfo method = AccessTools.Method(typeof(FilteredStorage), "OnStorageChanged");
-            Action<object> fsEggsOnStorageChanged, fsCreaturesOnStorageChanged;
-            fsEggsOnStorageChanged = method.CreateDelegate<Action<object>>(filteredStorageEggs);
-            //fsCreaturesOnStorageChanged = method.CreateDelegate<Action<object>>(filteredStorageCreatures);
-            Unsubscribe((int)GameHashes.OnStorageChange, fsEggsOnStorageChanged);
-            //Unsubscribe((int)GameHashes.OnStorageChange, fsCreaturesOnStorageChanged);
+            //Action<object> fsEggsOnStorageChanged, fsCreaturesOnStorageChanged;
+            (filteredStorageEggs, fetchListEggs) = MakeFilteredStorage(in GameTags.Egg, method);
+            //(filteredStorageCreatures, fetchListCreatures) = MakeFilteredStorage(in GameTags.Creatures.Deliverable, method);
             //fsOnStorageChanged = fsEggsOnStorageChanged + fsCreaturesOnStorageChanged;
-            fetchListEggs = Traverse.Create(filteredStorageEggs).Field<FetchList2>("fetchList");
         }
         protected override void OnSpawn()
         {
@@ -221,6 +222,7 @@ namespace ShinebugReactor
             Direction = Direction;
             Subscribe((int)GameHashes.OnStorageChange, OnStorageChanged);
             Subscribe((int)GameHashes.DeconstructComplete, OnDeconstruct);
+            treeFilterable.OnFilterChanged += OnFilterChanged;
             filteredStorageEggs.FilterChanged();
             //filteredStorageCreatures.FilterChanged();
 
@@ -230,8 +232,7 @@ namespace ShinebugReactor
 
                 radiationEmitter.SetEmitting(true);
             }
-            treeFilterable.OnFilterChanged += OnFilterChanged;
-            accumulator = Game.Instance.accumulators.Add("Element", this);
+            accumulator = Game.Instance.accumulators.Add(name, this);
             structureTemperature = StructureTemperatures.GetHandle(gameObject);
             //UpdateLogic();
 
@@ -274,17 +275,15 @@ namespace ShinebugReactor
             {
                 UpdateLogic();
 
-                FetchList2 fetchList1 = fetchListEggs.Value;
-                //FetchList2 fetchList2 = Traverse.Create(filteredStorageCreatures)
-                //.Field("fetchList").GetValue<FetchList2>();
+                FetchList2 fetchList1 = fetchListEggs.Value;//, fetchList2 = fetchListCreatures.Value;
                 if (fetchList1 == null || !fetchList1.InProgress)
                 {
                     filteredStorageEggs.FilterChanged();
                 }
-                //if (fetchList2 == null || !fetchList2.InProgress)
-                //{
-                //filteredStorageCreatures.FilterChanged();
-                //}
+                /*if (fetchList2 == null || !fetchList2.InProgress)
+                {
+                    filteredStorageCreatures.FilterChanged();
+                }*/
                 //fsOnStorageChanged(null);
             }
         }
@@ -302,35 +301,20 @@ namespace ShinebugReactor
 
         public void SpawnCreature(ShinebugSimulator shinebug)
         {
-            GameObject go = Util.KInstantiate(Assets.GetPrefab(shinebug.Name),
+            GameObject go = Util.KInstantiate(Assets.GetPrefab(shinebug.Id),
                 Grid.CellToPosCBC(storageDropCell, Grid.SceneLayer.Creatures));
             go.SetActive(true);
             AgeMonitor.Instance smi = go.GetSMI<AgeMonitor.Instance>();
             if (smi != null)
             {
-                smi.age.value = shinebug.Age / 600f;
+                smi.age.value = shinebug.Age / CYCLE_LENGTH;
             }
         }
 
-        public void SpawnDrops(ShinebugSimulator shinebug)
+        public static void SpawnDrops(ShinebugSimulator shinebug)
         {
-            string[] drops = Assets.GetPrefab(shinebug.Name)?.GetComponent<Butcherable>()?.drops;
-            if (drops != null)
-            {
-                foreach (string drop in drops)
-                {
-                    GameObject go = Util.KInstantiate(Assets.GetPrefab(drop),
-                        Grid.CellToPosCBC(storageDropCell, Grid.SceneLayer.Ore));
-                    go.SetActive(true);
-                    Edible edible = go.GetComponent<Edible>();
-                    if (edible)
-                    {
-                        ReportManager.Instance.ReportValue(ReportManager.ReportType.CaloriesCreated,
-                            edible.Calories, StringFormatter.Replace(ENDOFDAYREPORT.NOTES.BUTCHERED,
-                            "{0}", go.GetProperName()), ENDOFDAYREPORT.NOTES.BUTCHERED_CONTEXT);
-                    }
-                }
-            }
+            Butcherable butcherable = Assets.GetPrefab(shinebug.Id)?.GetComponent<Butcherable>();
+            butcherable?.CreateDrops();
         }
 
         public void SpawnHEP()
@@ -358,7 +342,7 @@ namespace ShinebugReactor
             {
                 for (int i = Creatures.Count - 1; i >= 0; --i)
                 {
-                    if (!(tags.Contains(Creatures[i].Name) || tags.Contains(Creatures[i].Name + EGG_POSTFIX)))
+                    if (!(tags.Contains(Creatures[i].Id) || tags.Contains(Creatures[i].Id + EGG_POSTFIX)))
                     {
                         SpawnCreature(Creatures[i]);
                         Creatures.RemoveAt(i);
@@ -387,7 +371,7 @@ namespace ShinebugReactor
             }
             else if (go.HasTag(GameTags.Creature))
             {
-                float age = (go.GetSMI<AgeMonitor.Instance>()?.age.value * 600f).GetValueOrDefault();
+                float age = go.GetSMI<AgeMonitor.Instance>().age.value * CYCLE_LENGTH;
                 EggHatched(go, age);
                 go.DeleteObject();
                 dirty = false;
@@ -426,9 +410,9 @@ namespace ShinebugReactor
             if (operational.IsActive)
             {
                 float rad = 0;
-                foreach (ShinebugSimulator.ShinebugData shinebugData
-                    in Creatures.Select(shinebug => shinebug.Data))
+                foreach (ShinebugSimulator shinebug in Creatures)
                 {
+                    var shinebugData = shinebug.Data;
                     switch (Options.Instance.PowerGenerationMode)
                     {
                         case Options.PowerGenerationModeType.SolarPanel:
@@ -444,7 +428,8 @@ namespace ShinebugReactor
                 switch (Options.Instance.PowerGenerationMode)
                 {
                     case Options.PowerGenerationModeType.SolarPanel:
-                        CurrentWattage *= RADIUS_FACTOR * SolarPanelConfig.WATTS_PER_LUX;
+                        CurrentWattage *= ShinebugReactorConfig.RADIUS_FACTOR
+                            * SolarPanelConfig.WATTS_PER_LUX;
                         break;
                     case Options.PowerGenerationModeType.Ratio:
                         CurrentWattage *= Options.Instance.MaxPowerOutput / MaxCapacity;
@@ -484,7 +469,7 @@ namespace ShinebugReactor
                         GameStrings.BUILDING.STATUSITEMS.OPERATINGENERGY.OPERATING, dt);
                     if (particleStorage.RemainingCapacity() > 0f)
                     {
-                        particleStorage.Store(Mathf.Min((CurrentHEP / 600f) * dt,
+                        particleStorage.Store(Mathf.Min((CurrentHEP / CYCLE_LENGTH) * dt,
                             particleStorage.RemainingCapacity()));
                     }
                 }
@@ -520,15 +505,15 @@ namespace ShinebugReactor
                 Unsubscribe((int)GameHashes.OnStorageChange, OnStorageChanged);
                 for (int i = Creatures.Count - 1; i >= 0; --i)
                 {
-                    if (Creatures[i].Simulate(dt))
+                    ShinebugSimulator shinebug = Creatures[i];
+                    if (shinebug.Simulate(dt))
                     {
                         dirty = true;
-                        ShinebugSimulator shinebug = Creatures[i];
                         Creatures.RemoveAt(i);
                         SpawnDrops(shinebug);
                         if (Options.Instance.ReproductionMode == Options.ReproductionModeType.Reproduction)
                         {
-                            GameObject egg = GameUtil.KInstantiate(Assets.GetPrefab(shinebug.Name + EGG_POSTFIX),
+                            GameObject egg = GameUtil.KInstantiate(Assets.GetPrefab(shinebug.Id + EGG_POSTFIX),
                                 transform.position, Grid.SceneLayer.Ore);
                             egg.SetActive(true);
                             storage.Store(egg);

@@ -5,7 +5,7 @@
     <Import Condition=" Exists('Directory.Build.props.user') " Project="Directory.Build.props.user" />
 
     <PropertyGroup>
-        <SupportedContent>VANILLA_ID, EXPANSION1_ID</SupportedContent>
+        <SupportedContent>ALL</SupportedContent>
         <MinimumSupportedBuild>525812</MinimumSupportedBuild>
         <APIVersion>2</APIVersion>
     </PropertyGroup>
@@ -28,7 +28,7 @@
     </ItemDefinitionGroup>
 
     <ItemGroup>
-        <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
+        <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.34" />
         <Reference Include="0Harmony" />
         <Reference Include="Assembly-CSharp" />
         <Reference Include="Assembly-CSharp-firstpass" />
@@ -36,7 +36,7 @@
         <Reference Include="UnityEngine.CoreModule" />
     </ItemGroup>
     <ItemGroup Condition="'$(UsePLib)' == 'true'">
-        <PackageReference Include="PLib" Version="4.15" />
+        <PackageReference Include="PLib" Version="4.16" />
         <Reference Include="Newtonsoft.Json" />
         <Reference Include="Unity.TextMeshPro" />
         <Reference Include="UnityEngine.TextRenderingModule" />

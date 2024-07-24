@@ -62,8 +62,10 @@ namespace ShinebugReactor
         {
             public static class BUILDINGEFFECTS
             {
+                public static readonly LocString SHINEBUGREACTORWATTSPERLUX = "Lux/watt: {0}";
                 public static class TOOLTIPS
                 {
+                    public static readonly LocString SHINEBUGREACTORWATTSPERLUX = "Generates " + FormatAsPositiveRate("{1}") + " of power for {0}";
                     public static readonly LocString SHINEBUGREACTORREQUIRESPOWER = "Should generate at least " + FormatAsNegativeRate("{0}") + " of power to produce radbolts";
                     public static readonly LocString SHINEBUGREACTORHEATGENERATED = "Generates " + FormatAsPositiveRate("{0}") + " per second while producing radbolts";
                 }

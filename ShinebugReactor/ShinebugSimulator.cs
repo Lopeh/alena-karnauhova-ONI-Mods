@@ -10,7 +10,7 @@ namespace ShinebugReactor
     {
         public readonly struct ShinebugData
         {
-            //public string Name;
+            //public string Id;
             public readonly float MaxAge;
             public readonly float Lux;
             public readonly float Rad;
@@ -23,33 +23,34 @@ namespace ShinebugReactor
             }
             public override string ToString() => $"(ShinebugData) MaxAge: {MaxAge}; Lux: {Lux}; Rad: {Rad}";
         }
-        protected static readonly Dictionary<string, ShinebugData> ShinebugValues = new Dictionary<string, ShinebugData>();
+        protected static readonly Dictionary<Tag, ShinebugData> ShinebugValues = new Dictionary<Tag, ShinebugData>();
 
-        public readonly string Name;
+        public readonly Tag Id;
         public float Age;
         public ShinebugData Data
         {
             get
             {
-                if (!ShinebugValues.ContainsKey(Name))
+                ShinebugData data;
+                if (!ShinebugValues.TryGetValue(Id, out data))
                 {
-                    GameObject prefab = Assets.GetPrefab(Name);
-                    string ageAttributeId = Db.Get().Amounts.Age.maxAttribute.Id;
-                    Trait creatureTrait = Db.Get().traits.TryGet(prefab.GetComponent<Modifiers>()
-                        .initialTraits.Last());//FindLast(x => x.Contains("LightBug")));
-                    float maxAge = creatureTrait.SelfModifiers.Find(x => x.AttributeId.Equals(ageAttributeId)).Value;
+                    GameObject prefab = Assets.GetPrefab(Id);
+                    var ageAttribute = Db.Get().Amounts.Age.maxAttribute;
+                    float maxAge = AttributeInstance.GetTotalValue(ageAttribute,
+                        prefab.GetComponent<Modifiers>().GetPreModifiers(ageAttribute));
                     Light2D light = prefab.GetComponent<Light2D>();
                     float lux = (light?.Lux).GetValueOrDefault()/* * light?.Range*/;
                     float rad = (prefab.GetComponent<RadiationEmitter>()?.emitRads).GetValueOrDefault();
-                    ShinebugValues.Add(Name, new ShinebugData(maxAge * 600f, lux, rad));
+                    data = new ShinebugData(maxAge * ShinebugReactor.CYCLE_LENGTH, lux, rad);
+                    ShinebugValues.Add(Id, data);
                 }
-                return ShinebugValues[Name];
+                return data;
             }
         }
 
-        public ShinebugSimulator(string name, float age = 0.0f)
+        public ShinebugSimulator(Tag id, float age = 0.0f)
         {
-            Name = name;
+            Id = id;
             Age = age;
         }
 
@@ -60,7 +61,7 @@ namespace ShinebugReactor
         }
 
         public override string ToString() =>
-            $"(FakeShinebug) {Name}: {Age}s/{Data.MaxAge}s {Data.Lux} Lux {Data.Rad} Rads";
+            $"(FakeShinebug) {Id}: {Age}s/{Data.MaxAge}s {Data.Lux} Lux {Data.Rad} Rads";
     }
     /*public static readonly Dictionary<string, ShinebugEggData> shinebugEggValues = new Dictionary<string, ShinebugEggData>()
 {

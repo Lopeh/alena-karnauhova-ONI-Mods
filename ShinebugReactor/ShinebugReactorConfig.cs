@@ -18,14 +18,15 @@ namespace ShinebugReactor
         //public const string tech = "RenewableEnergy";
         public const int width = 9;//10
         public const int height = 5;
+        public const string FIRE_PORT_ID = "ShinebugReactorFirePort";
+        public const string FULL_PORT_ID = "ShinebugReactorFullPort";
+        public const float RADIUS_FACTOR = 26.5f;
         //public const float WattageRating = BUILDINGS.ENERGY_CONSUMPTION_WHEN_ACTIVE.TIER7;
         public const float WattageRequired = BUILDINGS.ENERGY_CONSUMPTION_WHEN_ACTIVE.TIER5;
         //public const float PowerSaveEnergyRequired = BUILDINGS.ENERGY_CONSUMPTION_WHEN_ACTIVE.TIER3;
         public const short EmitRange = 4;
         public const float EmitLeakRate = 0.1f;
         public static float HeatPerSecond;
-        public const string FIRE_PORT_ID = "ShinebugReactorFirePort";
-        public const string FULL_PORT_ID = "ShinebugReactorFullPort";
         public static readonly PBuilding PBuilding
             = new PBuilding(ID, SHINEBUGREACTOR.NAME)
         {
@@ -62,9 +63,10 @@ namespace ShinebugReactor
             BuildingDef buildingDef = PBuilding.CreateDef();
             buildingDef.RequiresPowerOutput = true;
             buildingDef.PowerOutputOffset = CellOffset.none;
-            buildingDef.GeneratorWattageRating = Options.Instance.MaxPowerOutput;
-            buildingDef.GeneratorBaseCapacity = buildingDef.GeneratorWattageRating;
-            if (DlcManager.FeatureRadiationEnabled())
+            buildingDef.GeneratorBaseCapacity = buildingDef.GeneratorWattageRating
+                = Options.Instance.MaxPowerOutput;
+            ConfigureDescriptors(buildingDef);
+            if (Sim.IsRadiationEnabled())
             {
                 buildingDef.HighEnergyParticleOutputOffset = new CellOffset(1, 2);
                 buildingDef.UseHighEnergyParticleOutputPort = true;
@@ -76,7 +78,7 @@ namespace ShinebugReactor
                     SHINEBUGREACTOR.LOGIC_PORT_FIRE_ACTIVE,
                     SHINEBUGREACTOR.LOGIC_PORT_FIRE_INACTIVE)
                 };
-                ConfigureDescriptors(buildingDef);
+                ConfigureHEPDescriptors(buildingDef);
             }
             buildingDef.LogicOutputPorts = new List<LogicPorts.Port>()
             {
@@ -92,7 +94,19 @@ namespace ShinebugReactor
         private static void ConfigureDescriptors(BuildingDef buildingDef)
         {
             List<Descriptor> descriptors = buildingDef.EffectDescription
-                ?? (buildingDef.EffectDescription = new List<Descriptor>(2));
+                ?? (buildingDef.EffectDescription = new List<Descriptor>(3));
+            if (Options.Instance.PowerGenerationMode == Options.PowerGenerationModeType.SolarPanel)
+            {
+                string formattedLuxPerWatt = GameUtil.GetFormattedLux(Mathf.CeilToInt(1f/(RADIUS_FACTOR * SolarPanelConfig.WATTS_PER_LUX)));
+                descriptors.Add(new Descriptor(
+                    string.Format(STRINGS.UI.BUILDINGEFFECTS.SHINEBUGREACTORWATTSPERLUX, formattedLuxPerWatt),
+                    string.Format(STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.SHINEBUGREACTORWATTSPERLUX, formattedLuxPerWatt, GameUtil.GetFormattedWattage(1f)),
+                    Descriptor.DescriptorType.Effect));
+            }
+        }
+        private static void ConfigureHEPDescriptors(BuildingDef buildingDef)
+        {
+            List<Descriptor> descriptors = buildingDef.EffectDescription;
 
             string formattedWattage = GameUtil.GetFormattedWattage(WattageRequired);
             descriptors.Add(new Descriptor(
@@ -124,7 +138,7 @@ namespace ShinebugReactor
             SolidConduitFilteredConsumer conduitConsumer = go.AddOrGet<SolidConduitFilteredConsumer>();
             conduitConsumer.alwaysConsume = true;
             go.AddOrGetDef<PoweredActiveController.Def>();
-            if (DlcManager.FeatureRadiationEnabled())
+            if (Sim.IsRadiationEnabled())
             {
                 HighEnergyParticleStorage particleStorage = go.AddOrGet<HighEnergyParticleStorage>();
                 particleStorage.capacity = HighEnergyParticleSpawnerConfig.MAX_SLIDER;
@@ -141,14 +155,14 @@ namespace ShinebugReactor
             Storage storage = go.AddOrGet<Storage>();
             storage.capacityKg = 400f;
             storage.showInUI = true;
-            //storage.showDescriptor = true;
             storage.SetDefaultStoredItemModifiers(Storage.StandardFabricatorStorage);
-            List<Tag> eggTags = new List<Tag>(1) { GameTags.Egg };
-            //eggTags.AddRange(STORAGEFILTERS.BAGABLE_CREATURES);
-            //eggTags.AddRange(STORAGEFILTERS.SWIMMING_CREATURES);
+            List<Tag> tags = new List<Tag>(3)
+            {
+                GameTags.Egg,
+                //GameTags.BagableCreature, GameTags.SwimmingCreature
+            };
 
-            //eggTags.AddRange(ShinebugReactor.shinebugEggValues.Keys.Select(x => TagManager.Create(x)));
-            storage.storageFilters = eggTags;//new List<Tag>() { GameTags.Egg };
+            storage.storageFilters = tags;
             return storage;
         }
         private static void ConfigureSolidBase(GameObject go)
@@ -183,19 +197,6 @@ namespace ShinebugReactor
             light.Offset = new Vector2(0f, (int)(height / 2f));
             light.Lux = 1800;
             return light;
-            /*for (int i = 0; i < 4; ++i)
-            {
-                Light2D light2D = go.AddComponent<Light2D>();
-                light2D.Color = LIGHT2D.LIGHTBUG_COLOR;
-                light2D.overlayColour = LIGHT2D.LIGHTBUG_OVERLAYCOLOR;
-                light2D.Range = 1f;
-                light2D.Angle = 0.0f;
-                light2D.Direction = LIGHT2D.LIGHTBUG_DIRECTION;
-                light2D.Offset = new Vector2(i / 2, (i % 2) + 2f);
-                light2D.shape = LightShape.Circle;
-                light2D.drawOverlay = true;
-                light2D.Lux = 1800;
-            }*/
         }
 
         private static void ConfigureVisualSize(GameObject go)

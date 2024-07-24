@@ -85,6 +85,14 @@ msgctxt "ShinebugReactor.STRINGS.BUILDING.STATUSITEMS.SHINEBUGREACTORHEPPRODUCTI
 msgid "Radbolt production is disabled by automation"
 msgstr "Производство радболтов отключено автоматикой"
 
+msgctxt "ShinebugReactor.STRINGS.UI.BUILDINGEFFECTS.SHINEBUGREACTORWATTSPERLUX"
+msgid "Lux/watt: {0}"
+msgstr "Люкс/ватт: {0}"
+
+msgctxt "ShinebugReactor.STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.SHINEBUGREACTORWATTSPERLUX"
+msgid "Generates <style=\"produced\">{1}</style> of power for {0}"
+msgstr "Вырабатывает <style=\"produced\">{1}</style> энергии за {0}"
+
 msgctxt "ShinebugReactor.STRINGS.UI.BUILDINGEFFECTS.TOOLTIPS.SHINEBUGREACTORREQUIRESPOWER"
 msgid "Should generate at least <style=\"consumed\">{0}</style> of power to produce radbolts"
 msgstr "Должен производить минимум <style=\"consumed\">{0}</style> энергии для генерации радболтов"
