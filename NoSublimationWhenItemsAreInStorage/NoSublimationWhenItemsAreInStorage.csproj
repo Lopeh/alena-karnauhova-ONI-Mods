@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <ModName>Stop Sublimation While In Storage</ModName>
-        <MinimumSupportedBuild>469369</MinimumSupportedBuild>
+        <MinimumSupportedBuild>622222</MinimumSupportedBuild>
     </PropertyGroup>
 
 </Project>
