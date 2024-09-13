@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using PeterHan.PLib.Core;
@@ -13,9 +12,9 @@ namespace BlockDecorBehindWalls
     {
         public static bool CheckBackwall(int cell)
         {
-            return Grid.IsValidCell(cell)
-                && Grid.Objects[cell, (int)ObjectLayer.Backwall]?
-                .GetComponent<BuildingComplete>();
+            GameObject go = Grid.Objects[cell, (int)ObjectLayer.Backwall];
+            if (go == null) return false;
+            return go.GetComponent<BuildingComplete>();
         }
 
         [HarmonyPatch(typeof(DecorProvider), "AddDecor")]
@@ -41,12 +40,12 @@ namespace BlockDecorBehindWalls
         {
             if (building.Def?.ObjectLayer == ObjectLayer.Backwall)
             {
-                foreach (int cell in building.PlacementCells.Where(Grid.IsValidCell))
+                foreach (int cell in building.PlacementCells)
                 {
                     for (int layer = 0; layer < (int)ObjectLayer.NumLayers; ++layer)
                     {
                         GameObject go = Grid.Objects[cell, layer];
-                        if (!go) continue;
+                        if (go == null) continue;
                         DecorProvider decorProvider = go.GetComponent<DecorProvider>();
                         BuildingDef def = go.GetComponent<BuildingComplete>()?.Def;
                         if (decorProvider && def)
