@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <ModName>Radiate Heat in Space</ModName>
-        <MinimumSupportedBuild>496912</MinimumSupportedBuild>
         <UsePLib>true</UsePLib>
     </PropertyGroup>
 

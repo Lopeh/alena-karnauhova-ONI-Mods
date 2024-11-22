@@ -57,7 +57,7 @@ namespace RadiateHeatInSpace
             var simCellOccupier = go.AddOrGet<SimCellOccupier>();
             simCellOccupier.doReplaceElement = true;
             simCellOccupier.strengthMultiplier = 1.5f;
-            simCellOccupier.movementSpeedMultiplier = DUPLICANTSTATS.MOVEMENT.BONUS_2;
+            simCellOccupier.movementSpeedMultiplier = DUPLICANTSTATS.MOVEMENT_MODIFIERS.BONUS_2;
             simCellOccupier.notifyOnMelt = true;
             go.AddOrGet<TileTemperature>();
             go.AddOrGet<KAnimGridTileVisualizer>().blockTileConnectorID = TileConfig.BlockTileConnectorID;

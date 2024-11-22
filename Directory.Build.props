@@ -6,12 +6,12 @@
 
     <PropertyGroup>
         <SupportedContent>ALL</SupportedContent>
-        <MinimumSupportedBuild>525812</MinimumSupportedBuild>
+        <MinimumSupportedBuild>642695</MinimumSupportedBuild>
         <APIVersion>2</APIVersion>
     </PropertyGroup>
 
     <PropertyGroup>
-        <TargetFramework>net471</TargetFramework>
+        <TargetFramework>net48</TargetFramework>
         <Authors>shelena_malk</Authors>
         <Product>ONI_Mods</Product>
         <DebugType>none</DebugType>
