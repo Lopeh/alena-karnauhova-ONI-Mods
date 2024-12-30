@@ -48,11 +48,12 @@ namespace Commons
         protected void ConduitUpdate(float dt)
         {
             bool consumed = false;
-            if (IsConnected)
+            if (IsConnected && storage != null)
             {
                 SolidConduitFlow conduitFlow = getConduitFlow();
                 SolidConduitFlow.ConduitContents contents = conduitFlow.GetContents(utilityCellField.Value);
-                if (contents.pickupableHandle.IsValid() && (alwaysConsume || operational.IsOperational))
+                Pickupable pickupable1 = conduitFlow.GetPickupable(contents.pickupableHandle);
+                if (pickupable1 != null && (alwaysConsume || operational.IsOperational))
                 {
                     float occupiedAmount;
                     float capacity;
@@ -61,16 +62,15 @@ namespace Commons
                         occupiedAmount = capacityControl.AmountStored;
                         capacity = capacityControl.UserMaxCapacity;
                     }
-                    else {
+                    else
+                    {
                         occupiedAmount = capacityTag != GameTags.Any ? storage.GetMassAvailable(capacityTag) : storage.MassStored();
                         capacity = Mathf.Min(storage.capacityKg, capacityKG);
                     }
                     float spaceAvailable = Mathf.Max(0.0f, capacity - occupiedAmount);
                     if (spaceAvailable > 0.0f)
                     {
-                        Pickupable pickupable1 = conduitFlow.GetPickupable(contents.pickupableHandle);
-                        bool canConsume = true;
-                        canConsume = (capacityControl != null) ?
+                        bool canConsume = (capacityControl != null) ?
                             pickupable1.TotalAmount <= spaceAvailable || pickupable1.TotalAmount > capacity
                             : pickupable1.PrimaryElement.Mass <= spaceAvailable || pickupable1.PrimaryElement.Mass > capacity;
                         if (treeFilterable)
@@ -80,7 +80,7 @@ namespace Commons
                         if (canConsume)
                         {
                             Pickupable pickupable2 = conduitFlow.RemovePickupable(utilityCellField.Value);
-                            if (pickupable2)
+                            if (pickupable2 != null)
                             {
                                 storage.Store(pickupable2.gameObject, true);
                                 consumed = true;
@@ -88,9 +88,8 @@ namespace Commons
                         }
                     }
                 }
-            }
-            if (storage != null)
                 storage.storageNetworkID = getConnectedNetworkID();
+            }
             consumingField.Value = consumed;
         }
     }

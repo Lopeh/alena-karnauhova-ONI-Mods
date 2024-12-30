@@ -294,7 +294,7 @@ namespace ShinebugReactor
             Unsubscribe((int)GameHashes.OnStorageChange, OnStorageChanged);
             storage.Drop(egg);
             Subscribe((int)GameHashes.OnStorageChange, OnStorageChanged);
-            string shinebugName = egg.PrefabID().Name.Replace(EGG_POSTFIX, string.Empty).Replace(BABY_POSTFIX, string.Empty);
+            var shinebugName = egg.PrefabID().Name.Replace(EGG_POSTFIX, string.Empty).Replace(BABY_POSTFIX, string.Empty);
             Creatures.Add(new ShinebugSimulator(shinebugName, age));
             UpdateFetch();
         }
@@ -342,7 +342,7 @@ namespace ShinebugReactor
             {
                 for (int i = Creatures.Count - 1; i >= 0; --i)
                 {
-                    if (!(tags.Contains(Creatures[i].Id) || tags.Contains(Creatures[i].Id + EGG_POSTFIX)))
+                    if (!(tags.Contains(Creatures[i].Id) || tags.Contains(Creatures[i].Data.Egg)))
                     {
                         SpawnCreature(Creatures[i]);
                         Creatures.RemoveAt(i);
@@ -513,7 +513,7 @@ namespace ShinebugReactor
                         SpawnDrops(shinebug);
                         if (Options.Instance.ReproductionMode == Options.ReproductionModeType.Reproduction)
                         {
-                            GameObject egg = GameUtil.KInstantiate(Assets.GetPrefab(shinebug.Id + EGG_POSTFIX),
+                            GameObject egg = GameUtil.KInstantiate(Assets.GetPrefab(shinebug.Data.Egg),
                                 transform.position, Grid.SceneLayer.Ore);
                             egg.SetActive(true);
                             storage.Store(egg);

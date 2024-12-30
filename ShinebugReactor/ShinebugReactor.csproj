@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <ModName>Shinebug Reactor</ModName>
-        <MinimumSupportedBuild>575720</MinimumSupportedBuild>
         <UsePLib>true</UsePLib>
     </PropertyGroup>
 
