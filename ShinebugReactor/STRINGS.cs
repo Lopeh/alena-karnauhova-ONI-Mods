@@ -124,6 +124,12 @@ namespace ShinebugReactor
                     public static readonly LocString DESC = "In this mode power per creature = max power output / max creature limit, for any creature that emits light.";
                 }
             }
+
+            public static class STATICLIGHTEMISSION
+            {
+                public static readonly LocString NAME = "Static light emission";
+                public static readonly LocString DESC = "If enabled, reactor will always emit a static amount of light to prevent being too bright; otherwise, emitted light will be calculated based on critters inside.";
+            }
         }
     }
 }

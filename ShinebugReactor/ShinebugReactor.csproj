@@ -2,7 +2,9 @@
 
     <PropertyGroup>
         <ModName>Shinebug Reactor</ModName>
+        <Description>A building that produces power and radbolts from critters</Description>
         <UsePLib>true</UsePLib>
+        <MinimumSupportedBuild>674504</MinimumSupportedBuild>
     </PropertyGroup>
 
     <Import Project="..\Utils\Utils.projitems" Label="Shared" />

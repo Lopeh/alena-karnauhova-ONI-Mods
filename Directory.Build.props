@@ -5,8 +5,9 @@
     <Import Condition=" Exists('Directory.Build.props.user') " Project="Directory.Build.props.user" />
 
     <PropertyGroup>
-        <SupportedContent>ALL</SupportedContent>
-        <MinimumSupportedBuild>642695</MinimumSupportedBuild>
+        <RequiredDLCs></RequiredDLCs>
+        <ForbiddenDLCs></ForbiddenDLCs>
+        <MinimumSupportedBuild>659901</MinimumSupportedBuild>
         <APIVersion>2</APIVersion>
     </PropertyGroup>
 

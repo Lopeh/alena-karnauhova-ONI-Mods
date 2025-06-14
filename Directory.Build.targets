@@ -36,7 +36,8 @@
             <ModInfoFile>$(TargetDir)\mod_info.yaml</ModInfoFile>
             <ModDescriptionFile>$(TargetDir)\mod.yaml</ModDescriptionFile>
             <ModInfoFileContent>
-supportedContent: $(SupportedContent)
+requiredDlcIds: $(RequiredDLCs)
+forbiddenDlcIds: $(ForbiddenDLCs)
 minimumSupportedBuild: $(MinimumSupportedBuild)
 version: $([System.DateTime]::UtcNow.ToString("yyyy.MM.dd"));
 APIVersion: $(APIVersion)

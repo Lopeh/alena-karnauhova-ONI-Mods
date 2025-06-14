@@ -2,6 +2,6 @@
 <Project>
     <PropertyGroup>
         <GameFolder>D:\Games\Steam\steamapps\common\OxygenNotIncluded\OxygenNotIncluded_Data\Managed\</GameFolder>
-        <ModFolder>$(UserProfile)\Documents\Klei\OxygenNotIncluded\mods\dev\</ModFolder>
+        <ModFolder>D:\Users\$(UserName)\Documents\Klei\OxygenNotIncluded\mods\dev\</ModFolder>
     </PropertyGroup>
 </Project>

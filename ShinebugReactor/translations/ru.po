@@ -181,6 +181,14 @@ msgctxt "ShinebugReactor.STRINGS.OPTIONS.POWERGENERATIONMODE.RATIO.DESC"
 msgid "Power per creature = max power output / max creature limit, for any creature that emits light."
 msgstr "Энергия от существа = макс. мощность / макс. лимит существ, для любого существа, излучающего свет."
 
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.STATICLIGHTEMISSION.NAME"
+msgid "Static light emission"
+msgstr "Статическое световое излучение"
+
+msgctxt "ShinebugReactor.STRINGS.OPTIONS.STATICLIGHTEMISSION.DESC"
+msgid "If enabled, reactor will always emit a static amount of light to prevent being too bright; otherwise, emitted light will be calculated based on critters inside."
+msgstr "Если включено, реактор всегда будет излучать статическое количество света, чтобы предотвратить чрезмерную яркость; в противном случае, излучаемый свет будет рассчитываться относительно существ внутри."
+
 msgctxt "Commons.STRINGS.UI.UISIDESCREENS.ITEMSREMOVABLE_SIDE_SCREEN.TITLE"
 msgid "Allowable Storage"
 msgstr "Разрешаемое хранилище"

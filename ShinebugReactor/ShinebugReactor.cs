@@ -136,6 +136,8 @@ namespace ShinebugReactor
         public float CurrentWattage;
         [NonSerialized]
         public float CurrentHEP;
+        [NonSerialized]
+        public float CurrentLight;
 
         public EightDirection Direction
         {
@@ -407,19 +409,21 @@ namespace ShinebugReactor
             light.enabled = operational.IsActive;
             CurrentWattage = 0f;
             CurrentHEP = 0f;
+            CurrentLight = 0f;
             if (operational.IsActive)
             {
                 float rad = 0;
                 foreach (ShinebugSimulator shinebug in Creatures)
                 {
                     var shinebugData = shinebug.Data;
+                    CurrentLight += shinebugData.Lux;
                     switch (Options.Instance.PowerGenerationMode)
                     {
-                        case Options.PowerGenerationModeType.SolarPanel:
+                        /*case Options.PowerGenerationModeType.SolarPanel:
                             CurrentWattage += shinebugData.Lux;
-                            break;
+                            break;*/
                         case Options.PowerGenerationModeType.Ratio:
-                            if (shinebugData.Lux > 0)
+                            if (shinebugData.Lux > 0f)
                                 CurrentWattage++;
                             break;
                     }
@@ -428,12 +432,21 @@ namespace ShinebugReactor
                 switch (Options.Instance.PowerGenerationMode)
                 {
                     case Options.PowerGenerationModeType.SolarPanel:
-                        CurrentWattage *= ShinebugReactorConfig.RADIUS_FACTOR
-                            * SolarPanelConfig.WATTS_PER_LUX;
+                        CurrentWattage = ShinebugReactorConfig.RADIUS_FACTOR
+                            * SolarPanelConfig.WATTS_PER_LUX * CurrentLight;
                         break;
                     case Options.PowerGenerationModeType.Ratio:
                         CurrentWattage *= Options.Instance.MaxPowerOutput / MaxCapacity;
                         break;
+                }
+                if (!Options.Instance.StaticLightEmission)
+                {
+                    var newLightAmount = (int)(CurrentLight * ShinebugReactorConfig.EmitLeakRate);
+                    if (light.Lux != newLightAmount)
+                    {
+                        light.Lux = newLightAmount;
+                        light.FullRefresh();
+                    }
                 }
                 if (particleStorage)
                 {

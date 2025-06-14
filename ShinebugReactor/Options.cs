@@ -26,6 +26,10 @@ namespace ShinebugReactor
         public PowerGenerationModeType PowerGenerationMode { get; set; } = PowerGenerationModeType.SolarPanel;
 
         [JsonProperty]
+        [Option("STRINGS.OPTIONS.STATICLIGHTEMISSION.NAME", "STRINGS.OPTIONS.STATICLIGHTEMISSION.DESC")]
+        public bool StaticLightEmission { get; set; } = true;
+
+        [JsonProperty]
         [Option("STRINGS.OPTIONS.FIXINCUBATORPRIORITY.NAME", "STRINGS.OPTIONS.FIXINCUBATORPRIORITY.DESC")]
         public bool FixIncubatorPriority { get; set; } = false;
 
