@@ -10,7 +10,7 @@ namespace BlockDecorBehindWalls
 {
     public class BlockDecorBehindWalls : KMod.UserMod2
     {
-        private static Tag fancyWallTag = new Tag("FancyWall");
+        private static Tag fancyWallTag = new Tag("BlockDecorBehindWalls_FancyWall");
         private static readonly Tag[] ignoreTags = new Tag[] { fancyWallTag };
 
         public static bool CheckBackwall(int cell)
